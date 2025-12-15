@@ -4,7 +4,7 @@ const predictionresultSchema = mongoose.Schema({
     
     patient_id: String,
     prediction: String,
-    probability: Number,
+    percentage: Number,
     recommenddoctor: String,
     
 });
