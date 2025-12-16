@@ -6,6 +6,10 @@ const predictionresultSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    prediction_record_id: {
+        type: String,
+        required: true
+    },
     prediction: {
         type: String,
         required: true,
