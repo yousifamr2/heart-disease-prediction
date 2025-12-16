@@ -4,8 +4,7 @@ const patientSchema = mongoose.Schema({
     
     _id : {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     email : {
         type: String,

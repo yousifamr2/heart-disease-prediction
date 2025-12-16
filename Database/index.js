@@ -12,6 +12,9 @@ app.use(cors());
 // Connect to database
 connectDB();
 
+// Routes
+app.use("/api/patients", require("./routes/patientsRoutes"));
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
