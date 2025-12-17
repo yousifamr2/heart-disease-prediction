@@ -40,4 +40,4 @@ const hospitalsSchema = mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model("Hospitals", hospitalsSchema);
+module.exports = mongoose.model("Hospital", hospitalsSchema);

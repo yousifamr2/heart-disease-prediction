@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const predictionresultSchema = mongoose.Schema({
+const predictionresultsSchema = mongoose.Schema({
     
     patient_id: {
         type: String,
@@ -30,4 +30,4 @@ const predictionresultSchema = mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model("Prediction Result", predictionresultSchema);
+module.exports = mongoose.model("Prediction Result", predictionresultsSchema);
