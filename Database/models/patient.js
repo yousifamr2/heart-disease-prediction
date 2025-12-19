@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const patientsSchema = mongoose.Schema({
     
     _id : {
-        type: String,
+        type: number,
         required: true
     },
     email : {
