@@ -16,6 +16,13 @@ const labTestsSchema = mongoose.Schema({
         unique: true
     },
 
+    // 👇 هيتملأ وقت ما اليوزر يعمل Register
+    user_id: {
+        type: Number,
+        ref: "User",
+        default: null
+    },
+
     age: { type: Number, required: true },
     sex: { type: Number, required: true },
     chest_pain_type: { type: Number, required: true },
@@ -39,3 +46,4 @@ const labTestsSchema = mongoose.Schema({
 });
 
 module.exports = mongoose.model("LabTest", labTestsSchema);
+
