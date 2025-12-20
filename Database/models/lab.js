@@ -1,26 +1,26 @@
 const mongoose = require("mongoose");
 
 const labsSchema = mongoose.Schema({
-    
-    email : {
+    _id: {
+        type: Number,
+        required: true
+    },
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    lab_code: {
         type: String,
         required: true,
         unique: true,
-        lowercase: true,
+        uppercase: true,
         trim: true
     },
-    username : {
+    address: {
         type: String,
-        required: true,
-        unique: true,
-        trim: true
-    },
-    password : {
-        type: String,
-        required: true,
-        minlength: 6
-    },
-    
+        required: true
+    }
 }, {
     timestamps: true
 });

@@ -13,7 +13,7 @@ app.use(cors());
 connectDB();
 
 // Routes
-app.use("/api/patients", require("./routes/patientsRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

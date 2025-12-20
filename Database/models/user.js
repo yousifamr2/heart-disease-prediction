@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const patientsSchema = mongoose.Schema({
+const usersSchema = mongoose.Schema({
     
     _id : {
         type: Number,
@@ -33,4 +33,4 @@ const patientsSchema = mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model("Patient", patientsSchema);
+module.exports = mongoose.model("User", usersSchema);
