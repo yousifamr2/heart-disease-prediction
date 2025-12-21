@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 
 const labTestsSchema = mongoose.Schema({
-    _id: {
-        type: Number,
-        required: true
-    },
+    
     lab_id: {
         type: Number,
         required: true,
