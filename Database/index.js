@@ -15,6 +15,7 @@ connectDB();
 // Routes
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/labs", require("./routes/labRoute"));
+app.use("/api/labtests", require("./routes/labtestRoute"));
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
