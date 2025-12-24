@@ -9,12 +9,6 @@ const labTestsSchema = mongoose.Schema({
         required: true
     },
 
-    //  التوكن اللي المريض بياخده من المعمل
-    test_token: {
-        type: String,
-        required: true,
-        unique: true
-    },
 
     //  بيتربط بالمستخدم بعد ما يدخل التوكن
     user_id: {
