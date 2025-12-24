@@ -11,13 +11,16 @@ const labsSchema = mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        uppercase: true,
         trim: true
     },
     address: {
         type: String,
         required: true
-    }
+    },
+    google_maps_link: {
+        type: String,
+        required: true
+    },
 }, {
     timestamps: true
 });
