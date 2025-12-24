@@ -27,19 +27,7 @@ const usersSchema = mongoose.Schema({
         type: String,
         required: true
     },
-
-    // 👇 مهم جدًا للسيناريو
-    is_verified: {
-        type: Boolean,
-        default: false
-    },
-
-    // 👇 توضيحي للمناقشة (اختياري)
-    registered_via_lab: {
-        type: Boolean,
-        default: false
-    }
-
+    
 }, {
     timestamps: true
 });
