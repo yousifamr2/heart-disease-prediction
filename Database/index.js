@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const labRoutes = require("./routes/labRoutes");
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ connectDB();
 
 // Routes
 app.use("/api/users", require("./routes/userRoutes"));
-
+app.use("/api/labs", require("./routes/labRoutes"));
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
