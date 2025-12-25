@@ -16,11 +16,8 @@ const labsSchema = mongoose.Schema({
     address: {
         type: String,
         required: true
-    },
-    google_maps_link: {
-        type: String,
-        required: true
-    },
+    }
+ 
 }, {
     timestamps: true
 });

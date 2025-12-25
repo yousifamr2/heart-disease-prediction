@@ -13,7 +13,7 @@ app.use(cors());
 connectDB();
 
 // Routes
-app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/users", require("./routes/userRoute"));
 app.use("/api/labs", require("./routes/labRoute"));
 app.use("/api/labtests", require("./routes/labtestRoute"));
 app.use("/api/hospitals", require("./routes/hospitalRoute"));
