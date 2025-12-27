@@ -1,24 +1,24 @@
 const mongoose = require("mongoose");
 
-const labTestsSchema = mongoose.Schema({
+const labTestSchema = mongoose.Schema({
 
-    //  المعمل (pre-registered)
-    lab_id: {
+    // ربط التحليل بالمعمل
+    lab_id: { // ربط التحليل بالمعمل
         type: mongoose.Schema.Types.ObjectId,
         ref: "Lab",
         required: true
     },
 
-
-    //  بيتربط بالمستخدم بعد ما يدخل التوكن
-    user_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        default: null
+    // ربط التحليل بالمريض
+    national_id: { // ربط التحليل بالمريض
+        type: String,
+        required: true,
+        length: 14,
+        index: true
     },
 
-    //  Features بتاعة الـ ML Model
-    features: {
+    // Features بتاعة الـ ML
+    features: { // الميزات الموجودة في التحليل
         age: { type: Number, required: true },
         sex: { type: Number, required: true },
         chest_pain_type: { type: Number, required: true },
@@ -34,21 +34,14 @@ const labTestsSchema = mongoose.Schema({
         thal: { type: Number, required: true }
     },
 
-    //  هل التوكن اتستخدم ولا لسه
-    is_claimed: {
-        type: Boolean,
-        default: false
-    },
-
-    //  نتيجة التنبؤ (محفوظة هنا بدل table تانية)
-    prediction_result: {
+    // نتيجة التنبؤ (بتتخزن بعد Start Prediction)
+    prediction_result: { // نتيجة التنبؤ
         type: String,
         enum: ["High Risk", "Low Risk"],
         default: null
     },
 
-    //  نسبة الخطورة
-    prediction_percentage: {
+    prediction_percentage: { // النسبة المئوية للتنبؤ
         type: Number,
         min: 0,
         max: 100,
@@ -56,7 +49,7 @@ const labTestsSchema = mongoose.Schema({
     }
 
 }, {
-    timestamps: true
+    timestamps: true 
 });
 
-module.exports = mongoose.model("LabTest", labTestsSchema);
+module.exports = mongoose.model("LabTest", labTestSchema);

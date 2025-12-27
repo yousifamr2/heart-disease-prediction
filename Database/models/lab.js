@@ -2,18 +2,18 @@ const mongoose = require("mongoose");
 
 const labsSchema = mongoose.Schema({
 
-    name: {
+    name: { // الاسم الموجود في جوجل مابس للمعمل
         type: String,
         required: true,
         trim: true
     },
-    lab_code: {
+    lab_code: { 
         type: String,
         required: true,
         unique: true,
         trim: true
     },
-    address: {
+    address: { // العنوان الموجود في جوجل مابس للمعمل
         type: String,
         required: true
     }

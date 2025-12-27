@@ -17,13 +17,7 @@ const hospitalsSchema = mongoose.Schema({
     google_maps_link: {
         type: String,
         required: true
-    },
-
-    address: {
-        type: String,
-        trim: true
     }
-
 }, {
     timestamps: true
 });

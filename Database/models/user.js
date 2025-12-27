@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
 
-    national_id: {
+    national_id: { // الرقم القومي للمريض
         type: String,
         required: true,
         unique: true,
@@ -10,20 +10,20 @@ const userSchema = mongoose.Schema({
         trim: true
     },
 
-    username: {
+    username: { // الاسم المستخدم للمريض
         type: String,
         required: true,
         trim: true
     },
 
-    email: {
+    email: { // البريد الإلكتروني للمريض
         type: String,
         required: true,
         unique: true,
         trim: true
     },
 
-    password: {
+    password: { // كلمة المرور للمريض
         type: String,
         required: true,
         minlength: 6
