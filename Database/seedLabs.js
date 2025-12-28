@@ -45,6 +45,7 @@ const labs = [
     lab_code: "SGD006",
     address: "987 Sidi Gaber Square, Alexandria"
   }
+  
 ];
 
 const seedLabs = async () => {
@@ -60,7 +61,7 @@ const seedLabs = async () => {
     console.log(`${createdLabs.length} labs seeded successfully!`);
 
     // Display seeded labs
-    console.log("\nSeeded Labs:");
+    console.log("\nSeeded Labs:"); 
     createdLabs.forEach((lab, index) => {
       console.log(`${index + 1}. ${lab.name} - Code: ${lab.lab_code}`);
     });
