@@ -3,22 +3,22 @@ const mongoose = require("mongoose");
 const labTestSchema = mongoose.Schema({
 
     // ربط التحليل بالمعمل
-    lab_id: { // ربط التحليل بالمعمل
+    lab_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Lab",
         required: true
     },
 
     // ربط التحليل بالمريض
-    national_id: { // ربط التحليل بالمريض
+    national_id: {
         type: String,
         required: true,
         length: 14,
         index: true
     },
 
-    // Features بتاعة الـ ML
-    features: { // الميزات الموجودة في التحليل
+    // Features (الميزات الموجودة في التحليل بتاعه الـ ML)
+    features: { 
         age: { type: Number, required: true },
         sex: { type: Number, required: true },
         chest_pain_type: { type: Number, required: true },
@@ -35,7 +35,7 @@ const labTestSchema = mongoose.Schema({
     },
 
     // نتيجة التنبؤ (بتتخزن بعد Start Prediction)
-    prediction_result: { // نتيجة التنبؤ
+    prediction_result: {
         type: String,
         enum: ["High Risk", "Low Risk"],
         default: null
