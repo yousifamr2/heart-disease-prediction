@@ -42,10 +42,10 @@ const labs = [
   },
   {
     name: "Sidi Gaber Diagnostic Lab",
-    lab_code: "SGD006",
+    lab_code: "SGD006ss",
     address: "987 Sidi Gaber Square, Alexandria"
   }
-  
+
 ];
 
 const seedLabs = async () => {
