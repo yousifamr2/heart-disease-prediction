@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); 
 
-const labTestSchema = mongoose.Schema({
+const labTestSchema = mongoose.Schema({ 
 
     // ربط التحليل بالمعمل
     lab_id: {
@@ -22,16 +22,15 @@ const labTestSchema = mongoose.Schema({
         age: { type: Number, required: true },
         sex: { type: Number, required: true },
         chest_pain_type: { type: Number, required: true },
-        resting_blood_pressure: { type: Number, required: true },
+        resting_bp_s: { type: Number, required: true },
         cholesterol: { type: Number, required: true },
         fasting_blood_sugar: { type: Number, required: true },
         resting_ecg: { type: Number, required: true },
         max_heart_rate: { type: Number, required: true },
         exercise_angina: { type: Number, required: true },
         oldpeak: { type: Number, required: true },
-        slope: { type: Number, required: true },
-        ca: { type: Number, required: true },
-        thal: { type: Number, required: true }
+        st_slope: { type: Number, required: true },
+        target: { type: Number, required: true }
     },
 
     // نتيجة التنبؤ (بتتخزن بعد Start Prediction)
