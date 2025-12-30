@@ -29,8 +29,7 @@ const labTestSchema = mongoose.Schema({
         max_heart_rate: { type: Number, required: true },
         exercise_angina: { type: Number, required: true },
         oldpeak: { type: Number, required: true },
-        st_slope: { type: Number, required: true },
-        target: { type: Number, required: true }
+        st_slope: { type: Number, required: true }
     },
 
     // نتيجة التنبؤ (بتتخزن بعد Start Prediction)
