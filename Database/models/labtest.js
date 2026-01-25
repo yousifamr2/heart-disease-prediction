@@ -13,8 +13,15 @@ const labTestSchema = mongoose.Schema({
     national_id: {
         type: String,
         required: true,
-        length: 14,
-        index: true
+        minlength: 14,
+        maxlength: 14,
+        index: true,
+        validate: {
+            validator: function(v) {
+                return /^\d{14}$/.test(v); // يجب أن يكون 14 رقم فقط
+            },
+            message: "National ID must be exactly 14 digits"
+        }
     },
 
     // Features (الميزات الموجودة في التحليل بتاعه الـ ML)

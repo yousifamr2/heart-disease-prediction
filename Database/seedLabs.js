@@ -42,7 +42,7 @@ const labs = [
   },
   {
     name: "Sidi Gaber Diagnostic Lab",
-    lab_code: "SGD006ss",
+    lab_code: "SGD006",
     address: "987 Sidi Gaber Square, Alexandria"
   }
 

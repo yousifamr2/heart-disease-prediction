@@ -3,8 +3,11 @@ node_modules/
 
 # Environment variables
 .env
+.env.local
+.env.*.local
 
 # Logs
+logs/
 *.log
 npm-debug.log*
 
@@ -12,13 +15,19 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-# IDE files
-.vscode/
+# IDE
 .idea/
+.vscode/
 *.swp
 *.swo
 
-# Build files
+# Build output
 dist/
 build/
 
+# Coverage
+coverage/
+
+# Temporary files
+tmp/
+temp/
