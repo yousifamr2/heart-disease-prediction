@@ -1,13 +1,18 @@
 const express = require("express");
-const cors = require("cors");
+const cors = require("cors"); 
+const helmet = require("helmet");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+
+// Security middleware
+app.use(helmet());
 app.use(cors());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true }));
 
 // Connect to database
 connectDB();
