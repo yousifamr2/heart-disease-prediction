@@ -36,10 +36,29 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// Get lab tests by national_id
+// Get latest lab test by national_id (أحدث تحليل للمريض)
+router.get("/patient/:national_id/latest", async (req, res, next) => {
+  try {
+    const latestLabTest = await LabTest.findOne({ national_id: req.params.national_id })
+      .sort({ createdAt: -1 })  // ترتيب تنازلي (الأحدث أولاً)
+      .populate("lab_id");
+    
+    if (!latestLabTest) {
+      return res.status(404).json({ success: false, message: "No lab tests found for this patient" });
+    }
+    
+    res.json({ success: true, data: latestLabTest });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Get lab tests by national_id (كل التحاليل للمريض)
 router.get("/patient/:national_id", async (req, res, next) => {
   try {
-    const labTests = await LabTest.find({ national_id: req.params.national_id }).populate("lab_id");
+    const labTests = await LabTest.find({ national_id: req.params.national_id })
+      .sort({ createdAt: -1 })  // ترتيب تنازلي (الأحدث أولاً)
+      .populate("lab_id");
     res.json({ success: true, data: labTests });
   } catch (err) {
     next(err);
