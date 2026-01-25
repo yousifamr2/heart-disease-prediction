@@ -26,7 +26,7 @@ const userSchema = mongoose.Schema({
     password: { // كلمة المرور للمريض
         type: String,
         required: true,
-        minlength: 6
+        minlength: 5
     }
 }, {
     timestamps: true
