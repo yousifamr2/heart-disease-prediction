@@ -55,6 +55,16 @@ def main():
                          key=lambda x: models_results[x]['accuracy'])
     print(f"\nBest model: {best_model_name} (Accuracy: {models_results[best_model_name]['accuracy']:.4f})")
     
+    # Save best model
+    print("\n" + "="*60)
+    print("Saving Best Model")
+    print("="*60)
+    best_name, best_metrics = model.save_best_model(
+        X_test=X_test,
+        y_test=y_test,
+        save_path="models/best_model.pkl",
+        metric="accuracy"
+    )
 
     print("\n" + "="*60)
     print("Running Full Visualization Pipeline")

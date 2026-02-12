@@ -4,7 +4,12 @@ from preprocessing import handdling_outliers
 from Analytics import load_data
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from visualization import (
+    run_full_visualization_pipeline,
+    extract_model_metrics,
+    create_formatted_results_table,
+    plot_correlation_heatmap
+)
 def visuailation_outliers(data, column):
 
     plt.figure(figsize=(6,3))
@@ -19,7 +24,8 @@ def visuailation_outliers(data, column):
     
     print("="*50)
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
+    print(plot_correlation_heatmap.__doc__)
 #     train_df = load_data("data/heart_statlog_cleveland_hungary_final.csv")
 #     train_df = handdling_outliers(train_df)
 #     for col in train_df.columns:

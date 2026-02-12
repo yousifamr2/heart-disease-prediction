@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import joblib
+import os
 
 from sklearn.model_selection import train_test_split, GridSearchCV, StratifiedKFold
 from sklearn.metrics import (
@@ -18,8 +20,6 @@ from sklearn.ensemble import (
                                 GradientBoostingClassifier, 
                                 VotingClassifier, 
                                 StackingClassifier)
-from sklearn.svm import SVC
-
 
 try:
     from xgboost import XGBClassifier  
@@ -110,6 +110,26 @@ class Model:
                 "depth": [4, 6],
             }
     def prepare_data(self, data):
+        """
+        
+        Prepare data for training and testing.
+        
+        Parameters:
+        -----------
+        data : pd.DataFrame
+            Data to prepare
+        Returns:
+        --------
+        X_train : pd.DataFrame
+            Training features
+        X_test : pd.DataFrame
+            Testing features
+        y_train : pd.Series
+            Training target
+        y_test : pd.Series
+        Returns:
+        """
+        
         X = data.drop(columns=[self.target_col])
         y = data[self.target_col]
 
@@ -122,6 +142,22 @@ class Model:
                                 )
     
     def training_model(self, X_train, y_train, X_test, y_test):
+
+        """
+        Train the models.
+        
+        Parameters:
+        -----------
+        X_train : pd.DataFrame
+            Training features
+        y_train : pd.Series
+            Training target
+        X_test : pd.DataFrame
+            Testing features
+        y_test : pd.Series
+            Testing target
+        """
+        
         for name, model in self.base_models.items():
             print(f"Training {name}...")
             if name in self.param_grids:
@@ -153,6 +189,21 @@ class Model:
             self.evaluate_model(best_model, X_test, y_test, name)
 
     def evaluate_model(self, model, X_test, y_test, name):
+
+        """
+        Evaluate the model.
+        
+        Parameters:
+        -----------
+        model : model
+            Model to evaluate
+        X_test : pd.DataFrame
+            Testing features
+        y_test : pd.Series
+            Testing target
+        name : str
+            Name of the model
+        """
         val_preds = model.predict(X_test)
         acc = accuracy_score(y_test, val_preds)
         recall = recall_score(y_test, val_preds, average="weighted")
@@ -174,6 +225,16 @@ class Model:
         
     def stacking_model(self, X, y):
 
+        """
+        Stack the models.
+        
+        Parameters:
+        -----------
+        X : pd.DataFrame
+            Features
+        y : pd.Series
+            Target
+        """
         estimators = []
         for name, mdl in self.best_models.items():
             if hasattr(mdl, "__sklearn_tags__"):
@@ -193,6 +254,20 @@ class Model:
         return stacking_clf
     
     def voting_model(self, X, y):
+        """
+        Vote the models.
+        
+        Parameters:
+        -----------
+        X : pd.DataFrame
+            Features
+        y : pd.Series
+            Target
+        Returns:
+        --------
+        voting_clf : VotingClassifier
+            Voting classifier
+        """
         estimators = []
         for name, mdl in self.best_models.items():
             if hasattr(mdl, "__sklearn_tags__"):
@@ -210,3 +285,98 @@ class Model:
         )
         voting_clf.fit(X, y)
         return voting_clf
+    
+    def save_best_model(self, X_test, y_test, save_path="models/best_model.pkl", metric="accuracy"):
+        """
+        Save the best model based on performance metric.
+        
+        Parameters:
+        -----------
+        X_test : pd.DataFrame
+            Test features for evaluation
+        y_test : pd.Series
+            Test target for evaluation
+        save_path : str
+            Path to save the model (default: "models/best_model.pkl")
+        metric : str
+            Metric to use for selecting best model (default: "accuracy")
+            Options: "accuracy", "precision", "recall", "f1_score"
+        
+        Returns:
+        --------
+        str : Name of the best model
+        dict : Metrics of the best model
+        """
+        if not self.best_models:
+            raise ValueError("No models trained yet. Call training_model() first.")
+        
+        # Evaluate all models and find the best one
+        from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+        
+        model_scores = {}
+        for name, model in self.best_models.items():
+            y_pred = model.predict(X_test)
+            
+            if metric == "accuracy":
+                score = accuracy_score(y_test, y_pred)
+            elif metric == "precision":
+                score = precision_score(y_test, y_pred, average="weighted")
+            elif metric == "recall":
+                score = recall_score(y_test, y_pred, average="weighted")
+            elif metric == "f1_score":
+                score = f1_score(y_test, y_pred, average="weighted")
+            else:
+                raise ValueError(f"Unknown metric: {metric}")
+            
+            model_scores[name] = score
+        
+        # Find best model
+        best_model_name = max(model_scores.keys(), key=lambda x: model_scores[x])
+        best_model = self.best_models[best_model_name]
+        
+        # Create directory if it doesn't exist
+        os.makedirs(os.path.dirname(save_path) if os.path.dirname(save_path) else ".", exist_ok=True)
+        
+        # Save the model
+        joblib.dump(best_model, save_path)
+        
+        # Get all metrics for the best model
+        y_pred = best_model.predict(X_test)
+        best_metrics = {
+            "model_name": best_model_name,
+            "accuracy": accuracy_score(y_test, y_pred),
+            "precision": precision_score(y_test, y_pred, average="weighted"),
+            "recall": recall_score(y_test, y_pred, average="weighted"),
+            "f1_score": f1_score(y_test, y_pred, average="weighted")
+        }
+        
+        print(f"\n{'='*60}")
+        print(f"Best Model Saved: {best_model_name}")
+        print(f"{'='*60}")
+        print(f"Metric used: {metric}")
+        print(f"Score: {model_scores[best_model_name]:.4f}")
+        print(f"\nAll Metrics:")
+        print(f"  Accuracy : {best_metrics['accuracy']:.4f}")
+        print(f"  Precision: {best_metrics['precision']:.4f}")
+        print(f"  Recall   : {best_metrics['recall']:.4f}")
+        print(f"  F1 Score : {best_metrics['f1_score']:.4f}")
+        print(f"\nModel saved to: {save_path}")
+        print(f"{'='*60}\n")
+        
+        return best_model_name, best_metrics
+    
+    @staticmethod
+    def load_model(model_path):
+        """
+        Load a saved model.
+        
+        Parameters:
+        -----------
+        model_path : str
+            Path to the saved model file
+        
+        Returns:
+        --------
+        model : Trained model object
+        """
+        return joblib.load(model_path)

@@ -13,6 +13,9 @@ This module provides:
 Author: ML Engineering Team
 """
 
+
+import os
+import logging
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -31,13 +34,17 @@ from sklearn.metrics import (
     f1_score,
 )
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logger = logging.getLogger(__name__)
+
 # Optional SHAP import
 try:
     import shap
     SHAP_AVAILABLE = True
 except ImportError:
     SHAP_AVAILABLE = False
-    print("[INFO] SHAP not available. Install with: pip install shap")
+    logger.warning("SHAP not available. Install with: pip install shap")
 
 # Set style
 sns.set_style("whitegrid")
@@ -54,7 +61,8 @@ def plot_target_distribution(
     y: pd.Series,
     title: str = "Target/Class Distribution",
     figsize: Tuple[int, int] = (10, 5),
-    save_path: Optional[str] = None
+    save_path: Optional[str] = None,
+    show_plot: bool = True
 ) -> None:
     """
     Plot target/class distribution with count plot and percentages.
@@ -69,11 +77,14 @@ def plot_target_distribution(
         Figure size
     save_path : str, optional
         Path to save the figure
+    show_plot : bool
+        Whether to show the plot (default: True)
     """
     fig, axes = plt.subplots(1, 2, figsize=figsize)
     
-    # Count plot
-    sns.countplot(data=pd.DataFrame({'target': y}), x='target', ax=axes[0], palette='viridis')
+    # Count plot - Fix seaborn warning by adding hue parameter
+    target_df = pd.DataFrame({'target': y})
+    sns.countplot(data=target_df, x='target', hue='target', ax=axes[0], palette='viridis', legend=False)
     axes[0].set_title(f'{title} - Count', fontsize=12, fontweight='bold')
     axes[0].set_xlabel('Class')
     axes[0].set_ylabel('Count')
@@ -97,8 +108,15 @@ def plot_target_distribution(
     plt.tight_layout()
     
     if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, bbox_inches='tight')
-    plt.show()
+        logger.info(f"Saved: {save_path}")
+    
+    if show_plot:
+        plt.show()
+    
+    # Close figure to prevent duplicate plots
+    plt.close()
     plt.close()
 
 
@@ -107,7 +125,8 @@ def plot_feature_distributions(
     numerical_cols: Optional[List[str]] = None,
     max_features: int = 12,
     figsize: Tuple[int, int] = (15, 10),
-    save_path: Optional[str] = None
+    save_path: Optional[str] = None,
+    show_plot: bool = True
 ) -> None:
     """
     Plot histograms and boxplots for numerical features.
@@ -124,6 +143,8 @@ def plot_feature_distributions(
         Figure size
     save_path : str, optional
         Path to save the figure
+    show_plot : bool
+        Whether to show the plot (default: True)
     """
     if numerical_cols is None:
         numerical_cols = X.select_dtypes(include=[np.number]).columns.tolist()
@@ -133,7 +154,7 @@ def plot_feature_distributions(
     n_features = len(numerical_cols)
     
     if n_features == 0:
-        print("[WARN] No numerical features found.")
+        logger.warning("No numerical features found.")
         return
     
     # Calculate grid dimensions
@@ -169,8 +190,14 @@ def plot_feature_distributions(
     plt.tight_layout()
     
     if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, bbox_inches='tight')
-    plt.show()
+        logger.info(f"Saved: {save_path}")
+    
+    if show_plot:
+        plt.show()
+    
+    # Close figure to prevent duplicate plots
     plt.close()
 
 
@@ -179,7 +206,8 @@ def plot_correlation_heatmap(
     y: Optional[pd.Series] = None,
     numerical_cols: Optional[List[str]] = None,
     figsize: Tuple[int, int] = (12, 10),
-    save_path: Optional[str] = None
+    save_path: Optional[str] = None,
+    show_plot: bool = True
 ) -> None:
     """
     Plot correlation heatmap for numerical features.
@@ -196,6 +224,8 @@ def plot_correlation_heatmap(
         Figure size
     save_path : str, optional
         Path to save the figure
+    show_plot : bool
+        Whether to show the plot (default: True)
     """
     if numerical_cols is None:
         numerical_cols = X.select_dtypes(include=[np.number]).columns.tolist()
@@ -227,8 +257,14 @@ def plot_correlation_heatmap(
     plt.tight_layout()
     
     if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, bbox_inches='tight')
-    plt.show()
+        logger.info(f"Saved: {save_path}")
+    
+    if show_plot:
+        plt.show()
+    
+    # Close figure to prevent duplicate plots
     plt.close()
 
 
@@ -345,8 +381,12 @@ def plot_roc_curve(
     plt.tight_layout()
     
     if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, bbox_inches='tight')
+        logger.info(f"Saved: {save_path}")
     plt.show()
+    
+    # Close figure to prevent duplicate plots
     plt.close()
     
     return roc_auc
@@ -394,8 +434,12 @@ def plot_precision_recall_curve(
     plt.tight_layout()
     
     if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, bbox_inches='tight')
+        logger.info(f"Saved: {save_path}")
     plt.show()
+    
+    # Close figure to prevent duplicate plots
     plt.close()
     
     return avg_precision
@@ -534,8 +578,12 @@ def plot_model_evaluation(
     plt.suptitle(f'{model_name} - Comprehensive Evaluation', fontsize=16, fontweight='bold', y=0.98)
     
     if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, bbox_inches='tight')
+        logger.info(f"Saved: {save_path}")
     plt.show()
+    
+    # Close figure to prevent duplicate plots
     plt.close()
     
     return {
@@ -597,8 +645,9 @@ def create_model_comparison_table(
     print("="*60 + "\n")
     
     if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         df.to_csv(save_path)
-        print(f"[INFO] Comparison table saved to {save_path}")
+        logger.info(f"Comparison table saved to {save_path}")
     
     return df
 
@@ -778,7 +827,7 @@ def plot_training_time_vs_performance(
         Path to save the figure
     """
     if training_times is None:
-        print("[WARN] Training times not provided. Skipping plot.")
+        logger.warning("Training times not provided. Skipping plot.")
         return
     
     # Prepare data
@@ -844,7 +893,7 @@ def plot_feature_importance(
         # For linear models, use absolute coefficients
         importances = np.abs(model.coef_[0])
     else:
-        print("[WARN] Model does not support feature importance extraction.")
+        logger.warning("Model does not support feature importance extraction.")
         return pd.DataFrame()
     
     # Create dataframe
@@ -853,9 +902,9 @@ def plot_feature_importance(
         'importance': importances
     }).sort_values('importance', ascending=False).head(top_n)
     
-    # Plot
+    # Plot - Fix seaborn warning by adding hue parameter
     plt.figure(figsize=figsize)
-    sns.barplot(data=importance_df, y='feature', x='importance', palette='viridis')
+    sns.barplot(data=importance_df, y='feature', x='importance', hue='feature', palette='viridis', legend=False)
     plt.xlabel('Importance', fontsize=12)
     plt.ylabel('Feature', fontsize=12)
     plt.title(f'Top {top_n} Feature Importances', fontsize=14, fontweight='bold')
@@ -863,8 +912,12 @@ def plot_feature_importance(
     plt.tight_layout()
     
     if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, bbox_inches='tight')
+        logger.info(f"Saved: {save_path}")
     plt.show()
+    
+    # Close figure to prevent duplicate plots
     plt.close()
     
     return importance_df
@@ -901,7 +954,7 @@ def plot_shap_summary(
     shap.Explainer or None
     """
     if not SHAP_AVAILABLE:
-        print("[WARN] SHAP is not available. Install with: pip install shap")
+        logger.warning("SHAP is not available. Install with: pip install shap")
         return None
     
     try:
@@ -1088,7 +1141,7 @@ def analyze_error_patterns(
     n_cols = min(len(numerical_cols), 6)
     
     if n_cols == 0:
-        print("[WARN] No numerical features for error pattern analysis.")
+        logger.warning("No numerical features for error pattern analysis.")
         return
     
     fig, axes = plt.subplots(2, 3, figsize=figsize)
@@ -1179,12 +1232,12 @@ def run_full_visualization_pipeline(
     
     best_model = models[best_model_name]
     
-    print("="*60)
-    print("STARTING VISUALIZATION PIPELINE")
-    print("="*60)
+    logger.info("="*60)
+    logger.info("STARTING VISUALIZATION PIPELINE")
+    logger.info("="*60)
     
     # 1. Data Understanding
-    print("\n[1/5] Data Understanding...")
+    logger.info("[1/5] Data Understanding...")
     plot_target_distribution(
         pd.concat([y_train, y_test]),
         save_path=os.path.join(save_dir, 'target_distribution.png') if save_dir else None
@@ -1203,7 +1256,7 @@ def run_full_visualization_pipeline(
     )
     
     # 2. Model Evaluation
-    print("\n[2/5] Model Evaluation...")
+    logger.info("[2/5] Model Evaluation...")
     y_pred = best_model.predict(X_test)
     y_proba = best_model.predict_proba(X_test)
     
@@ -1217,7 +1270,7 @@ def run_full_visualization_pipeline(
     
     # 3. Model Comparison
     if models_results:
-        print("\n[3/5] Model Comparison...")
+        logger.info("[3/5] Model Comparison...")
         create_model_comparison_table(
             models_results,
             save_path=os.path.join(save_dir, 'model_comparison.csv') if save_dir else None
@@ -1227,10 +1280,10 @@ def run_full_visualization_pipeline(
             save_path=os.path.join(save_dir, 'model_comparison.png') if save_dir else None
         )
     else:
-        print("\n[3/5] Model Comparison skipped (no results provided)")
+        logger.info("[3/5] Model Comparison skipped (no results provided)")
     
     # 4. Model Explainability
-    print("\n[4/5] Model Explainability...")
+    logger.info("[4/5] Model Explainability...")
     plot_feature_importance(
         best_model,
         X_test.columns.tolist(),
@@ -1262,9 +1315,11 @@ def run_full_visualization_pipeline(
     #     save_path=os.path.join(save_dir, 'error_patterns.png') if save_dir else None
     # )
     
-    print("\n" + "="*60)
-    print("VISUALIZATION PIPELINE COMPLETE")
-    print("="*60)
+    logger.info("="*60)
+    logger.info("VISUALIZATION PIPELINE COMPLETE")
+    logger.info("="*60)
+    if save_dir:
+        logger.info(f"All visualizations saved to: {save_dir}")
 
 
 # ============================================================================
