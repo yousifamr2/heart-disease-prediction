@@ -9,6 +9,7 @@ def load_data(path):
 #     data = data.drop(columns=["id"])
 #     return data 
 
+
 def save_data(data, path):
     data.to_csv(path, sep=";")
 
