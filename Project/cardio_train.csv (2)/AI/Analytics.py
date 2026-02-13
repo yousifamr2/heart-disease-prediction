@@ -10,6 +10,7 @@ def load_data(path):
 #     return data 
 
 
+
 def save_data(data, path):
     data.to_csv(path, sep=";")
 
