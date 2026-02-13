@@ -36,6 +36,7 @@ try:
 except ImportError: 
     CatBoostClassifier = None
 
+
 Random_State = 42
 Test_Size = 0.2
 Target_Col = "target"
