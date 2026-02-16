@@ -7,7 +7,7 @@ dotenv.config();
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("MongoDB Connected Successfully!");
+    console.log("MongoDB ed SConnectuccessfully!");
   } catch (err) {
     console.error("MongoDB Connection Error: ", err);
     process.exit(1);
@@ -16,34 +16,34 @@ const connectDB = async () => {
 
 const labs = [
   {
-    name: "Central Medical Laboratory",
-    lab_code: "CML001",
-    address: "123 Main Street, Smouha, Alexandria"
+    name: "Al Mokhtabar labs",
+    lab_code: "Al Mokhtabar 123",
+    address: "Alexandria , 228 Port Said Street, Zamzam Tower - Sporting"
   },
   {
-    name: "Alexandria Diagnostic Center",
-    lab_code: "ADC002",
-    address: "456 Corniche Road, Sidi Gaber, Alexandria"
+    name: "AL Borg Labs",
+    lab_code: "AL Borg 123",
+    address: "Alexandria , 14 Faculty Of Medicine Street, Raml Station"
   },
   {
-    name: "El-Maamoura Medical Lab",
-    lab_code: "EMM003",
-    address: "789 El-Maamoura Street, Alexandria"
+    name: "Hassab Labs",
+    lab_code: "Hassab 123",
+    address: "Alexandria , 405 Al Horreya Road, Abu Qir Street - Sidi Gaber"
   },
   {
-    name: "Loran Clinical Laboratory",
-    lab_code: "LCL004",
-    address: "321 Loran Avenue, Alexandria"
+    name: "Royal Labs",
+    lab_code: "Royal 123",
+    address: "Alexandria ,  36 Saad Zaghloul Street, Raml Station, above Chicorel, 3rd floor"
   },
   {
-    name: "Smouha Health Lab",
-    lab_code: "SHL005",
-    address: "654 Health Center Road, Smouha, Alexandria"
+    name: "Al Shams Labs",
+    lab_code: "Al Shams 123",
+    address: "Alexandria , 86 Moharram Bek Street, in Front Of The Old Awlad El Sheikh Mosque  "
   },
   {
-    name: "Sidi Gaber Diagnostic Lab",
-    lab_code: "SGD006",
-    address: "987 Sidi Gaber Square, Alexandria"
+    name: "Al Nile Labs",
+    lab_code: "Al Nile 123",
+    address: "59 Safia Zaghloul Street, Raml Station, Alex Tower Commercial Building - Raml Station"
   }
 
 ];
