@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const hospitalsSchema = mongoose.Schema({
 
-    name: {
+    name: { // الاسم الموجود في جوجل مابس للمستشفى
         type: String,
         required: true,
         trim: true
@@ -14,10 +14,11 @@ const hospitalsSchema = mongoose.Schema({
         trim: true
     },
 
-    google_maps_link: {
+    google_maps_link: { // الرابط الموجود في جوجل مابس للمستشفى
         type: String,
         required: true
     }
+
 }, {
     timestamps: true
 });

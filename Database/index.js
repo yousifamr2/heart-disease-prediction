@@ -17,7 +17,14 @@ app.use(express.urlencoded({ extended: true }));
 // Connect to database
 connectDB();
 
+// Request logging middleware
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    next();
+});
+
 // Routes
+app.use("/api/auth", require("./routes/authRoute"));
 app.use("/api/users", require("./routes/userRoute"));
 app.use("/api/labs", require("./routes/labRoute"));
 app.use("/api/labtests", require("./routes/labtestRoute"));

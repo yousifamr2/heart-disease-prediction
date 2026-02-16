@@ -7,7 +7,7 @@ const labsSchema = mongoose.Schema({
         required: true,
         trim: true
     },
-    lab_code: { 
+    lab_code: { // الكود الموجود في جوجل مابس للمعمل
         type: String,
         required: true,
         unique: true,

@@ -50,12 +50,17 @@ const userSchema = mongoose.Schema({
 });
 
 // تشفير كلمة المرور قبل الحفظ
-userSchema.pre("save", async function() {
+userSchema.pre("save", async function(next) {
     // تشفير فقط إذا تم تعديل كلمة المرور
-    if (!this.isModified("password")) return;
+    if (!this.isModified("password")) return next();
     
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (err) {
+        next(err);
+    }
 });
 
 // دالة للتحقق من كلمة المرور

@@ -1,10 +1,12 @@
 const express = require("express");
 const LabTest = require("../models/labtest");
+const { validateLabTest } = require("../middleware/validation");
+const { authenticate } = require("../middleware/auth");
 
 const router = express.Router();
 
-// Create new lab test
-router.post("/", async (req, res, next) => {
+// Create new lab test (protected)
+router.post("/", authenticate, validateLabTest, async (req, res, next) => {
   try {
     const labTest = await LabTest.create(req.body);
     res.status(201).json({ success: true, data: labTest });
@@ -13,11 +15,30 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// Get all lab tests
+// Get all lab tests (with pagination)
 router.get("/", async (req, res, next) => {
   try {
-    const labTests = await LabTest.find().populate("lab_id");
-    res.json({ success: true, data: labTests });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const total = await LabTest.countDocuments();
+    const labTests = await LabTest.find()
+      .populate("lab_id")
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: labTests,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    });
   } catch (err) {
     next(err);
   }
@@ -75,8 +96,8 @@ router.get("/lab/:lab_id", async (req, res, next) => {
   }
 });
 
-// Update lab test
-router.put("/:id", async (req, res, next) => {
+// Update lab test (protected)
+router.put("/:id", authenticate, async (req, res, next) => {
   try {
     const labTest = await LabTest.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -91,8 +112,8 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-// Update prediction result only
-router.patch("/:id/prediction", async (req, res, next) => {
+// Update prediction result only (protected)
+router.patch("/:id/prediction", authenticate, async (req, res, next) => {
   try {
     const { prediction_result, prediction_percentage } = req.body;
     const labTest = await LabTest.findByIdAndUpdate(
@@ -112,8 +133,8 @@ router.patch("/:id/prediction", async (req, res, next) => {
   }
 });
 
-// Delete lab test
-router.delete("/:id", async (req, res, next) => {
+// Delete lab test (protected)
+router.delete("/:id", authenticate, async (req, res, next) => {
   try {
     const labTest = await LabTest.findByIdAndDelete(req.params.id);
     if (!labTest) {
