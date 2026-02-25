@@ -5,8 +5,8 @@ const { authenticate } = require("../middleware/auth");
 
 const router = express.Router();
 
-// Create new user
-router.post("/", validateUser, async (req, res, next) => {
+// Create new user (protected - for user management, not public registration)
+router.post("/", authenticate, validateUser, async (req, res, next) => {
   try {
     const user = await User.create(req.body);
     res.status(201).json({ success: true, data: user });

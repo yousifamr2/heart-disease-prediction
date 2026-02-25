@@ -177,13 +177,31 @@ Get single user by ID.
 ---
 
 ### 3. Create User
-**POST** `/users`
+**POST** `/users` 🔒 **Protected**
 
-Create a new user (same as register).
+Create a new user for management purposes (admin/user management). This is **not** a public registration endpoint and **does not return a token**.
+
+**Headers:**
+```
+Authorization: Bearer <token>
+```
 
 **Request Body:** Same as `/auth/register`
 
-**Note:** This endpoint returns a token, same as `/auth/register`
+**Response (201):**
+```json
+{
+  "success": true,
+  "data": {
+    "_id": "...",
+    "national_id": "12345678901234",
+    "username": "Ahmed Ali",
+    "email": "ahmed@example.com",
+    "createdAt": "...",
+    "updatedAt": "..."
+  }
+}
+```
 
 ---
 
@@ -288,6 +306,15 @@ Update lab information. Requires authentication.
 **Headers:**
 ```
 Authorization: Bearer <token>
+```
+
+**Request Body:**
+```json
+{
+  "name": "Updated Lab Name",
+  "lab_code": "LAB001",
+  "address": "Updated Lab Address"
+}
 ```
 
 ---
@@ -446,6 +473,27 @@ Update lab test information. Requires authentication.
 Authorization: Bearer <token>
 ```
 
+**Request Body:**
+```json
+{
+  "lab_id": "507f1f77bcf86cd799439011",
+  "national_id": "12345678901234",
+  "features": {
+    "age": 65,
+    "sex": 1,
+    "chest_pain_type": 2,
+    "resting_bp_s": 140,
+    "cholesterol": 220,
+    "fasting_blood_sugar": 0,
+    "resting_ecg": 1,
+    "max_heart_rate": 155,
+    "exercise_angina": 0,
+    "oldpeak": 1.5,
+    "st_slope": 1
+  }
+}
+```
+
 ---
 
 ### 8. Update Prediction Result Only
@@ -555,6 +603,15 @@ Update hospital information. Requires authentication.
 **Headers:**
 ```
 Authorization: Bearer <token>
+```
+
+**Request Body:**
+```json
+{
+  "name": "Updated Hospital Name",
+  "area": "Smouha",
+  "google_maps_link": "https://maps.google.com/..."
+}
 ```
 
 ---
