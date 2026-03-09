@@ -1,0 +1,163 @@
+/* خلفية السيكشن */
+.steps-wrapper {
+ background: linear-gradient(
+    to right,
+    rgba(78, 160, 177, 0.3) 0%,
+    #ffffff 10%,
+    #ffffff 90%,
+    rgba(17, 152, 183, 0.3) 100%
+  );
+
+  display: flex;
+  justify-content: center;  /* يوسّط أفقي */
+  align-items: center;      /* يوسّط رأسي (اختياري) */
+
+  padding: 120px 20px 80px;
+  position: relative;
+}
+
+/* العنوان Responsive */
+.main-title {
+  width: 100%;
+  max-width: 1013px;
+
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: clamp(24px, 4vw, 44px); 
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-transform: capitalize;
+
+  background: linear-gradient(90deg, #21444B 0%, #4EA0B1 54.33%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+
+  margin: 0 auto 40px;
+  padding: 0 15px;
+}
+
+.description {
+  width: 100%;
+  max-width: 900px;
+
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  font-size: clamp(16px, 1.8vw, 22px);
+  line-height: 1.5;
+  color: rgba(33, 68, 75, 0.85);
+
+  margin: 0 auto 50px;
+  padding: 0 15px;
+
+  text-align: center;
+}
+
+.line {
+  display: block;
+  margin: 0 auto;
+}
+
+.line1 { max-width: 100%; }
+.line2 { max-width: 75%; }
+.line3 { max-width: 55%; }
+
+/* كروت الخطوات */
+.step-card {
+  width: 100%;
+  max-width: 320px;
+
+  padding: 10px 20px 20px; /* تم تقليل الطول */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px; /* تقليل المسافة بين العناصر */
+
+  box-sizing: border-box;
+  border-radius: 8px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+}
+
+/* الكارت الأول */
+.step-card-1 {
+  width: fit-content;
+  background: #77BAC5CC;
+  padding: 10px 10px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.step-card-1 h5 { font-size: 28px; line-height: 1.1; }
+.step-card-1 h6 { font-size: 20px; line-height: 1.1; }
+.step-card-1 p  { font-size: 18px; line-height: 24px; letter-spacing: 0.07em; }
+
+/* الكارت الثاني */
+.step-card-2 {
+  max-width: 427px;
+  background: #77BAC599;
+  padding: 10px 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}
+.step-card-2 h5 { font-size: 28px; line-height: 1.1; }
+.step-card-2 h6 { font-size: 20px; line-height: 1.1; }
+.step-card-2 p  { font-size: 18px; line-height: 24px; letter-spacing: 0.07em; }
+
+/* الكارت الثالث */
+.step-card-3 {
+  max-width: 327px;
+  background: #77BAC566;
+  padding: 10px 5px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}
+.step-card-3 h5 { font-size: 28px; line-height: 1.1; }
+.step-card-3 h6 { font-size: 20px; line-height: 1.1; }
+.step-card-3 p  { font-size: 18px; line-height: 24px; letter-spacing: 0.07em; }
+
+/* تأثير Hover */
+.step-card:hover { transform: translateY(-12px); }
+
+/* الدائرة */
+.step-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+
+  background: rgba(191, 213, 218, 0.85);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 28px;
+  color: #000;
+}
+
+.step-card-1 .step-circle { background: #BFD5DA; }
+.step-card-2 .step-circle { background: #BFD5DAD9; }
+.step-card-3 .step-circle { background: #BFD5DAB2; }
+
+/* Responsive */
+@media (max-width: 992px) {
+  .step-card-1, .step-card-2, .step-card-3 { max-width: 100%; transform: none !important; }
+  .description { font-size: 16px; }
+}
+
+@media (max-width: 576px) {
+  .step-card { padding: 30px 15px 15px; }
+  .step-card h5 { font-size: 24px !important; }
+  .step-card h6 { font-size: 18px !important; }
+  .step-card p  { font-size: 16px !important; letter-spacing: 0.03em !important; }
+}
+
+@media (max-width: 768px) { .description { max-width: 95%; } }

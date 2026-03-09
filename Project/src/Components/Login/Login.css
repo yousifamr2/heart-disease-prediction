@@ -1,0 +1,199 @@
+body {
+    margin: 0;
+}
+/* ================= CONTAINER ================= */
+.login-container {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    justify-content: flex-start; /* مش في النص */
+    align-items: stretch;        /* ياخد الطول كله */
+
+    background: linear-gradient(135deg, #1198B7, #0f7f99);
+    padding: 0; /* نشيل البادينج */
+}
+
+/* ================= WRAPPER ================= */
+.login-wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    gap: 10px;
+    z-index: 1;
+}
+/* ================= LEFT SIDE ================= */
+.login-left {
+    flex: 1;
+    height: 100vh;
+    background: #f5f9ff;
+    border-radius: 30px;
+    padding: 80px 60px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    border: 1px solid rgba(0,0,0,0.05);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ================= RIGHT SIDE ================= */
+.login-right {
+    flex: 1;   /* 👈 أهم سطر */
+    border-radius: 30px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: flex-start;
+    padding: 50px;
+}
+
+/* ================= FORM CONTENT ================= */
+.login-content {
+    width: 100%;
+    max-width: 450px;
+    margin: auto;
+}
+
+/* ================= TITLE ================= */
+.login-content h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 32px;
+    font-weight: 700;
+
+    background: linear-gradient(to right, #21444b, #1198B7);
+    background-clip: text;            /* 👈 ده اللي ناقص */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+/* ================= INPUT GROUP ================= */
+.input-group {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.input-group input {
+    width: 100%;
+    height: 55px;
+    padding: 0 45px 0 18px;
+    border-radius: 10px;
+    border: 1px solid #d6dee5;
+    background-color: #f9fbfd;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #1198B7;
+    box-shadow: 0 0 8px rgba(17,152,183,0.25);
+    background: #fff;
+}
+
+/* ================= INPUT ICON ================= */
+.input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #21444b;
+    font-size: 16px;
+}
+
+/* ================= BUTTON ================= */
+.btn-gradient {
+    width: 100%;
+    height: 55px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #1198B7, #77bac5);
+    color: white;
+    border: none;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-bottom: 15px;
+}
+
+.btn-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+}
+
+/* ================= REGISTER LINK ================= */
+.register-link {
+    text-align: center;
+    font-size: 14px;
+}
+
+.register-link a {
+    color: #1198B7;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* ================= LOGO + TITLE RIGHT ================= */
+.logo-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    width: 40px;
+}
+
+.login-right h1,
+.heart-title h1 {
+    font-size: 35px;
+    font-weight: 800;
+    color: #183746;
+    margin: 0;
+}
+/* SOFT BACKGROUND SHADOWS */
+.shadow-top-start,
+.shadow-bottom-end {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 👈 فوق شمال */
+.shadow-top-start {
+  top: 0px;
+  left: 0px;
+background: radial-gradient(circle at top left, rgba(120,161,183,0.45), transparent 65%);
+}
+
+/* 👈 تحت يمين */
+.shadow-bottom-end {
+  bottom: -180px;
+  right: -180px;
+  background: radial-gradient(circle, rgba(120,161,183,0.35), transparent 60%);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 992px) {
+
+    .login-wrapper {
+        flex-direction: column;
+    }
+
+    .login-right {
+        width: 100%;
+        min-height: 250px;
+    }
+}
