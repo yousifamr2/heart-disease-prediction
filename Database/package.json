@@ -9,7 +9,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed:labs": "node seedLabs.js"
   },
-  "keywords": ["heart", "disease", "prediction", "api"],
+  "keywords": [
+    "heart",
+    "disease",
+    "prediction",
+    "api"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
@@ -19,7 +24,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "helmet": "^8.0.0",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.0.1"
   },
   "devDependencies": {

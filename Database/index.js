@@ -1,10 +1,19 @@
+const path = require("path");
+const dotenv = require("dotenv");
+
+// تحميل .env من نفس مجلد المشروع (حتى لو السيرفر شغّل من مجلد آخر)
+dotenv.config({ path: path.join(__dirname, ".env") });
+
 const express = require("express");
 const cors = require("cors"); 
 const helmet = require("helmet");
-const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
-dotenv.config();
+// التأكد من وجود JWT_SECRET قبل تشغيل السيرفر
+if (!process.env.JWT_SECRET || String(process.env.JWT_SECRET).trim() === "") {
+  console.error("ERROR: JWT_SECRET is missing or empty in .env");
+  process.exit(1);
+}
 
 const app = express();
 

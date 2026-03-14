@@ -49,19 +49,7 @@ const userSchema = mongoose.Schema({
     timestamps: true
 });
 
-// تشفير كلمة المرور قبل الحفظ
-userSchema.pre("save", async function(next) {
-    // تشفير فقط إذا تم تعديل كلمة المرور
-    if (!this.isModified("password")) return next();
-    
-    try {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (err) {
-        next(err);
-    }
-});
+// تشفير الباسورد يتم في الـ routes قبل الحفظ (لتجنب مشكلة next مع Mongoose 9)
 
 // دالة للتحقق من كلمة المرور
 userSchema.methods.comparePassword = async function(candidatePassword) {

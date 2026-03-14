@@ -1,14 +1,19 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const User = require("../models/user");
 
 const router = express.Router();
 
-// Generate JWT Token
+// Generate JWT Token (requires JWT_SECRET in .env)
 const generateToken = (userId) => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret || secret.trim() === "") {
+    throw new Error("Server misconfiguration: JWT_SECRET is not set in .env");
+  }
   return jwt.sign(
     { userId },
-    process.env.JWT_SECRET,
+    secret,
     { expiresIn: process.env.JWT_EXPIRE || "30d" }
   );
 };
@@ -38,8 +43,10 @@ router.post("/register", async (req, res, next) => {
       });
     }
 
-    // Create user
-    const user = await User.create({ national_id, username, email, password });
+    // Hash password then create user
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const user = await User.create({ national_id, username, email, password: hashedPassword });
 
     // Generate token
     const token = generateToken(user._id);

@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const { validateUser } = require("../middleware/validation");
 const { authenticate } = require("../middleware/auth");
@@ -8,7 +9,10 @@ const router = express.Router();
 // Create new user (protected - for user management, not public registration)
 router.post("/", authenticate, validateUser, async (req, res, next) => {
   try {
-    const user = await User.create(req.body);
+    const { password, ...rest } = req.body;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const user = await User.create({ ...rest, password: hashedPassword });
     res.status(201).json({ success: true, data: user });
   } catch (err) {
     next(err);
