@@ -1,0 +1,16 @@
+sample_id,risk_level,true_label,predicted_label,correct,true_label_name,predicted_label_name
+1,low_risk,0,0,True,No Disease,No Disease
+2,low_risk,0,0,True,No Disease,No Disease
+3,low_risk,0,0,True,No Disease,No Disease
+4,low_risk,0,0,True,No Disease,No Disease
+5,low_risk,0,0,True,No Disease,No Disease
+6,medium_risk,1,0,False,Disease,No Disease
+7,medium_risk,1,0,False,Disease,No Disease
+8,medium_risk,0,0,True,No Disease,No Disease
+9,medium_risk,1,0,False,Disease,No Disease
+10,medium_risk,0,0,True,No Disease,No Disease
+11,high_risk,1,1,True,Disease,Disease
+12,high_risk,1,1,True,Disease,Disease
+13,high_risk,1,0,False,Disease,No Disease
+14,high_risk,1,1,True,Disease,Disease
+15,high_risk,1,0,False,Disease,No Disease

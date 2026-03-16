@@ -1,0 +1,6 @@
+age,sex,chest pain type,resting bp s,cholesterol,fasting blood sugar,resting ecg,max heart rate,exercise angina,oldpeak,ST slope
+56,0,1,106,100,1,0,96,0,0.32,1
+49,0,2,110,233,1,0,98,0,-0.49,1
+45,0,2,104,113,1,1,123,0,-0.3,0
+50,0,2,121,134,1,0,84,0,0.86,0
+45,0,1,99,100,1,0,123,0,-1.29,1
