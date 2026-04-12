@@ -1,0 +1,40 @@
+{
+  "name": "heart_prediction-2",
+  "version": "1.0.0",
+  "description": "Heart Disease Prediction API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed:labs": "node seedLabs.js"
+  },
+  "keywords": [
+    "heart",
+    "disease",
+    "prediction",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@prisma/adapter-neon": "^7.7.0",
+    "@prisma/adapter-pg": "^7.7.0",
+    "@prisma/client": "^7.7.0",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "16.6.1",
+    "express": "^5.2.1",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.20.0",
+    "prisma": "^7.7.0",
+    "ws": "^8.20.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

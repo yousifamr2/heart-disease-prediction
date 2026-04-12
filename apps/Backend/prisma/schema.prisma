@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          String   @id @default(cuid())
+  national_id String   @unique
+  username    String
+  email       String   @unique
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Lab {
+  id        String    @id @default(cuid())
+  name      String
+  lab_code  String    @unique
+  address   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  labTests  LabTest[]
+
+  @@map("labs")
+}
+
+model LabTest {
+  id                    String   @id @default(cuid())
+  lab_id                String
+  national_id           String
+  age                   Float
+  sex                   Int
+  chest_pain_type       Int
+  resting_bp_s          Float
+  cholesterol           Float
+  fasting_blood_sugar   Int
+  resting_ecg           Int
+  max_heart_rate        Float
+  exercise_angina       Int
+  oldpeak               Float
+  st_slope              Int
+  prediction_result     String?
+  prediction_percentage Float?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  lab                   Lab      @relation(fields: [lab_id], references: [id], onDelete: Cascade)
+
+  @@index([national_id])
+  @@map("lab_tests")
+}
+
+model Hospital {
+  id               String   @id @default(cuid())
+  name             String
+  area             String
+  google_maps_link String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("hospitals")
+}
