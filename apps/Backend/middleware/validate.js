@@ -1,39 +1,33 @@
-const { ZodError } = require("zod");
-
 /**
- * Zod validation middleware
- * - Validates req.body / req.query / req.params against the schema
- * - Replaces req.body with the parsed (coerced + stripped) output
+ * Zod v4 validation middleware using safeParse (recommended approach in Zod v4)
+ * - Validates req.body / req.query / req.params
+ * - Replaces req.body with the parsed (coerced + stripped) output on success
  */
 const validate = (schema) => {
   return (req, res, next) => {
-    try {
-      const parsed = schema.parse({
-        body: req.body,
-        query: req.query,
-        params: req.params,
+    const result = schema.safeParse({
+      body: req.body,
+      query: req.query,
+      params: req.params,
+    });
+
+    if (!result.success) {
+      const issues = result.error?.issues ?? [];
+      const errors = issues.map((err) => ({
+        field: Array.isArray(err.path) ? err.path.slice(1).join(".") : "",
+        message: err.message,
+      }));
+
+      return res.status(400).json({
+        success: false,
+        message: "Validation failed",
+        errors,
       });
-
-      // استبدل req.body بالقيم المُنقّحة من Zod (بعد coerce + strip)
-      req.body = parsed.body ?? req.body;
-
-      next();
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const errors = error.errors.map((err) => ({
-          field: err.path.slice(1).join("."), // إزالة "body." من أول الـ path
-          message: err.message,
-        }));
-
-        return res.status(400).json({
-          success: false,
-          message: "Validation failed",
-          errors,
-        });
-      }
-
-      next(error);
     }
+
+    // Replace req.body with Zod-parsed values (coerced numbers, trimmed strings, etc.)
+    req.body = result.data.body ?? req.body;
+    next();
   };
 };
 

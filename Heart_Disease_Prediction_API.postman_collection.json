@@ -41,8 +41,8 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('youssef_id', json.data.id);",
-                  "    if (json.token) pm.collectionVariables.set('token', json.token);",
+                  "    pm.environment.set('youssef_id', json.data.id);",
+                  "    if (json.token) pm.environment.set('token', json.token);",
                   "    console.log('✅ Youssef registered. ID:', json.data.id);",
                   "}"
                 ],
@@ -74,7 +74,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('omar_id', json.data.id);",
+                  "    pm.environment.set('omar_id', json.data.id);",
                   "    console.log('✅ Omar registered. ID:', json.data.id);",
                   "}"
                 ],
@@ -106,8 +106,8 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 200 && json.token) {",
-                  "    pm.collectionVariables.set('token', json.token);",
-                  "    if (json.data) pm.collectionVariables.set('youssef_id', json.data.id);",
+                  "    pm.environment.set('token', json.token);",
+                  "    if (json.data) pm.environment.set('youssef_id', json.data.id);",
                   "    console.log('✅ Token saved for Youssef');",
                   "}"
                 ],
@@ -138,8 +138,9 @@
               "script": {
                 "exec": [
                   "const json = pm.response.json();",
-                  "if (pm.response.code === 200 && json.token) {",
-                  "    console.log('✅ Omar login successful');",
+                  "if (pm.response.code === 200 && json.data) {",
+                  "    pm.environment.set('omar_id', json.data.id);",
+                  "    console.log('✅ Omar login successful. ID:', json.data.id);",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -252,7 +253,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('lab_mokhtabar_id', json.data.id);",
+                  "    pm.environment.set('lab_mokhtabar_id', json.data.id);",
                   "    console.log('✅ Al Mokhtabar Lab ID:', json.data.id);",
                   "}"
                 ],
@@ -287,7 +288,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('lab_borg_id', json.data.id);",
+                  "    pm.environment.set('lab_borg_id', json.data.id);",
                   "    console.log('✅ AL Borg Lab ID:', json.data.id);",
                   "}"
                 ],
@@ -322,7 +323,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('lab_hassab_id', json.data.id);",
+                  "    pm.environment.set('lab_hassab_id', json.data.id);",
                   "    console.log('✅ Hassab Lab ID:', json.data.id);",
                   "}"
                 ],
@@ -357,7 +358,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('lab_royal_id', json.data.id);",
+                  "    pm.environment.set('lab_royal_id', json.data.id);",
                   "    console.log('✅ Royal Lab ID:', json.data.id);",
                   "}"
                 ],
@@ -392,7 +393,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('lab_shams_id', json.data.id);",
+                  "    pm.environment.set('lab_shams_id', json.data.id);",
                   "    console.log('✅ Al Shams Lab ID:', json.data.id);",
                   "}"
                 ],
@@ -427,7 +428,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('lab_nile_id', json.data.id);",
+                  "    pm.environment.set('lab_nile_id', json.data.id);",
                   "    console.log('✅ Al Nile Lab ID:', json.data.id);",
                   "}"
                 ],
@@ -530,7 +531,7 @@
                     "exec": [
                       "const json = pm.response.json();",
                       "if (pm.response.code === 201 && json.data) {",
-                      "    pm.collectionVariables.set('labtest_youssef_1_id', json.data.id);",
+                      "    pm.environment.set('labtest_youssef_1_id', json.data.id);",
                       "    console.log('✅ Youssef Test 1 ID:', json.data.id);",
                       "}"
                     ],
@@ -565,7 +566,7 @@
                     "exec": [
                       "const json = pm.response.json();",
                       "if (pm.response.code === 201 && json.data) {",
-                      "    pm.collectionVariables.set('labtest_youssef_2_id', json.data.id);",
+                      "    pm.environment.set('labtest_youssef_2_id', json.data.id);",
                       "    console.log('✅ Youssef Test 2 ID:', json.data.id);",
                       "}"
                     ],
@@ -665,7 +666,7 @@
                     "exec": [
                       "const json = pm.response.json();",
                       "if (pm.response.code === 201 && json.data) {",
-                      "    pm.collectionVariables.set('labtest_omar_1_id', json.data.id);",
+                      "    pm.environment.set('labtest_omar_1_id', json.data.id);",
                       "    console.log('✅ Omar Test 1 ID:', json.data.id);",
                       "}"
                     ],
@@ -964,7 +965,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('hospital_elite_id', json.data.id);",
+                  "    pm.environment.set('hospital_elite_id', json.data.id);",
                   "    console.log('✅ Elite Hospital ID:', json.data.id);",
                   "}"
                 ],
@@ -999,7 +1000,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('hospital_andalusia_id', json.data.id);",
+                  "    pm.environment.set('hospital_andalusia_id', json.data.id);",
                   "    console.log('✅ Andalusia Hospital ID:', json.data.id);",
                   "}"
                 ],
@@ -1034,7 +1035,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('hospital_alex_intl_id', json.data.id);",
+                  "    pm.environment.set('hospital_alex_intl_id', json.data.id);",
                   "    console.log('✅ Alexandria International Hospital ID:', json.data.id);",
                   "}"
                 ],
@@ -1069,7 +1070,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('hospital_salam_id', json.data.id);",
+                  "    pm.environment.set('hospital_salam_id', json.data.id);",
                   "    console.log('✅ Al Salam Hospital ID:', json.data.id);",
                   "}"
                 ],
@@ -1104,7 +1105,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('hospital_saudi_german_id', json.data.id);",
+                  "    pm.environment.set('hospital_saudi_german_id', json.data.id);",
                   "    console.log('✅ Saudi German Hospital ID:', json.data.id);",
                   "}"
                 ],
@@ -1139,7 +1140,7 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "if (pm.response.code === 201 && json.data) {",
-                  "    pm.collectionVariables.set('hospital_arab_contractors_id', json.data.id);",
+                  "    pm.environment.set('hospital_arab_contractors_id', json.data.id);",
                   "    console.log('✅ Arab Contractors Hospital ID:', json.data.id);",
                   "}"
                 ],
