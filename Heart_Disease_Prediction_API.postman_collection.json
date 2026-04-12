@@ -1,0 +1,1255 @@
+{
+  "info": {
+    "name": "Heart Disease Prediction API",
+    "_postman_id": "hd-prediction-api-2026",
+    "description": "Complete API collection for Heart Disease Prediction Backend.\n\n## Quick Start Order\n1. **Auth → Register - Youssef Amr** (token auto-saved)\n2. **Auth → Register - Omar Ahmed**\n3. **Auth → Login - Youssef Amr** (refreshes token)\n4. **Labs → Create** all 6 labs in order (IDs auto-saved)\n5. **Lab Tests → Youssef's Tests → Create** all 5\n6. **Lab Tests → Omar's Tests → Create** all 5\n7. **Hospitals → Create** all 6 hospitals\n\n**Base URL:** `http://localhost:5000`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "youssef_id", "value": "", "type": "string" },
+    { "key": "omar_id", "value": "", "type": "string" },
+    { "key": "youssef_national_id", "value": "30105012345678", "type": "string" },
+    { "key": "omar_national_id", "value": "30203024567891", "type": "string" },
+    { "key": "lab_mokhtabar_id", "value": "", "type": "string" },
+    { "key": "lab_borg_id", "value": "", "type": "string" },
+    { "key": "lab_hassab_id", "value": "", "type": "string" },
+    { "key": "lab_royal_id", "value": "", "type": "string" },
+    { "key": "lab_shams_id", "value": "", "type": "string" },
+    { "key": "lab_nile_id", "value": "", "type": "string" },
+    { "key": "labtest_youssef_1_id", "value": "", "type": "string" },
+    { "key": "labtest_youssef_2_id", "value": "", "type": "string" },
+    { "key": "labtest_omar_1_id", "value": "", "type": "string" },
+    { "key": "hospital_elite_id", "value": "", "type": "string" },
+    { "key": "hospital_andalusia_id", "value": "", "type": "string" },
+    { "key": "hospital_alex_intl_id", "value": "", "type": "string" },
+    { "key": "hospital_salam_id", "value": "", "type": "string" },
+    { "key": "hospital_saudi_german_id", "value": "", "type": "string" },
+    { "key": "hospital_arab_contractors_id", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Register - Youssef Amr",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('youssef_id', json.data.id);",
+                  "    if (json.token) pm.collectionVariables.set('token', json.token);",
+                  "    console.log('✅ Youssef registered. ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"national_id\": \"30105012345678\",\n  \"username\": \"youssef amr\",\n  \"email\": \"youssefamr4331@gmail.com\",\n  \"password\": \"youssef123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Register - Omar Ahmed",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('omar_id', json.data.id);",
+                  "    console.log('✅ Omar registered. ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"national_id\": \"30203024567891\",\n  \"username\": \"omar ahmed\",\n  \"email\": \"omarahmed2026@gmail.com\",\n  \"password\": \"omar1234\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login - Youssef Amr",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 200 && json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    if (json.data) pm.collectionVariables.set('youssef_id', json.data.id);",
+                  "    console.log('✅ Token saved for Youssef');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"youssefamr4331@gmail.com\",\n  \"password\": \"youssef123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login - Omar Ahmed",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 200 && json.token) {",
+                  "    console.log('✅ Omar login successful');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"omarahmed2026@gmail.com\",\n  \"password\": \"omar1234\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/users?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User - Youssef",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{youssef_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{youssef_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get User - Omar",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/users/{{omar_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{omar_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update User - Youssef (username)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Youssef Amr Updated\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/{{youssef_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "{{youssef_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete User (example)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/users/REPLACE_WITH_ID",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "REPLACE_WITH_ID"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏥 Labs",
+      "item": [
+        {
+          "name": "Create Lab - Al Mokhtabar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('lab_mokhtabar_id', json.data.id);",
+                  "    console.log('✅ Al Mokhtabar Lab ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Al Mokhtabar labs\",\n  \"lab_code\": \"Al Mokhtabar 123\",\n  \"address\": \"Alexandria , 228 Port Said Street, Zamzam Tower - Sporting\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/labs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs"]
+            }
+          }
+        },
+        {
+          "name": "Create Lab - AL Borg",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('lab_borg_id', json.data.id);",
+                  "    console.log('✅ AL Borg Lab ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"AL Borg Labs\",\n  \"lab_code\": \"AL Borg 123\",\n  \"address\": \"Alexandria , 14 Faculty Of Medicine Street, Raml Station\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/labs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs"]
+            }
+          }
+        },
+        {
+          "name": "Create Lab - Hassab",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('lab_hassab_id', json.data.id);",
+                  "    console.log('✅ Hassab Lab ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Hassab Labs\",\n  \"lab_code\": \"Hassab 123\",\n  \"address\": \"Alexandria , 405 Al Horreya Road, Abu Qir Street - Sidi Gaber\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/labs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs"]
+            }
+          }
+        },
+        {
+          "name": "Create Lab - Royal",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('lab_royal_id', json.data.id);",
+                  "    console.log('✅ Royal Lab ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Royal Labs\",\n  \"lab_code\": \"Royal 123\",\n  \"address\": \"Alexandria , 36 Saad Zaghloul Street, Raml Station, above Chicorel, 3rd floor\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/labs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs"]
+            }
+          }
+        },
+        {
+          "name": "Create Lab - Al Shams",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('lab_shams_id', json.data.id);",
+                  "    console.log('✅ Al Shams Lab ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Al Shams Labs\",\n  \"lab_code\": \"Al Shams 123\",\n  \"address\": \"Alexandria , 86 Moharram Bek Street, in Front Of The Old Awlad El Sheikh Mosque\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/labs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs"]
+            }
+          }
+        },
+        {
+          "name": "Create Lab - Al Nile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('lab_nile_id', json.data.id);",
+                  "    console.log('✅ Al Nile Lab ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Al Nile Labs\",\n  \"lab_code\": \"Al Nile 123\",\n  \"address\": \"59 Safia Zaghloul Street, Raml Station, Alex Tower Commercial Building - Raml Station\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/labs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs"]
+            }
+          }
+        },
+        {
+          "name": "Get All Labs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/labs?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Lab - Al Mokhtabar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/labs/{{lab_mokhtabar_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs", "{{lab_mokhtabar_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Lab - Al Mokhtabar (address)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address\": \"Alexandria , 228 Port Said Street, Zamzam Tower - Sporting (Updated)\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/labs/{{lab_mokhtabar_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs", "{{lab_mokhtabar_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Lab (example)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/labs/REPLACE_WITH_ID",
+              "host": ["{{base_url}}"],
+              "path": ["api", "labs", "REPLACE_WITH_ID"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔬 Lab Tests",
+      "item": [
+        {
+          "name": "Youssef's Tests (High Risk)",
+          "item": [
+            {
+              "name": "Create Test 1 - Youssef (age 49)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "if (pm.response.code === 201 && json.data) {",
+                      "    pm.collectionVariables.set('labtest_youssef_1_id', json.data.id);",
+                      "    console.log('✅ Youssef Test 1 ID:', json.data.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lab_id\": \"{{lab_mokhtabar_id}}\",\n  \"national_id\": \"{{youssef_national_id}}\",\n  \"features\": {\n    \"age\": 49,\n    \"sex\": 0,\n    \"chest_pain_type\": 3,\n    \"resting_bp_s\": 160,\n    \"cholesterol\": 180,\n    \"fasting_blood_sugar\": 0,\n    \"resting_ecg\": 0,\n    \"max_heart_rate\": 156,\n    \"exercise_angina\": 0,\n    \"oldpeak\": 1.0,\n    \"st_slope\": 2\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests"]
+                }
+              }
+            },
+            {
+              "name": "Create Test 2 - Youssef (age 48)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "if (pm.response.code === 201 && json.data) {",
+                      "    pm.collectionVariables.set('labtest_youssef_2_id', json.data.id);",
+                      "    console.log('✅ Youssef Test 2 ID:', json.data.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lab_id\": \"{{lab_mokhtabar_id}}\",\n  \"national_id\": \"{{youssef_national_id}}\",\n  \"features\": {\n    \"age\": 48,\n    \"sex\": 0,\n    \"chest_pain_type\": 4,\n    \"resting_bp_s\": 138,\n    \"cholesterol\": 214,\n    \"fasting_blood_sugar\": 0,\n    \"resting_ecg\": 0,\n    \"max_heart_rate\": 108,\n    \"exercise_angina\": 1,\n    \"oldpeak\": 1.5,\n    \"st_slope\": 2\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests"]
+                }
+              }
+            },
+            {
+              "name": "Create Test 3 - Youssef (age 37)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lab_id\": \"{{lab_mokhtabar_id}}\",\n  \"national_id\": \"{{youssef_national_id}}\",\n  \"features\": {\n    \"age\": 37,\n    \"sex\": 1,\n    \"chest_pain_type\": 4,\n    \"resting_bp_s\": 140,\n    \"cholesterol\": 207,\n    \"fasting_blood_sugar\": 0,\n    \"resting_ecg\": 0,\n    \"max_heart_rate\": 130,\n    \"exercise_angina\": 1,\n    \"oldpeak\": 1.5,\n    \"st_slope\": 2\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests"]
+                }
+              }
+            },
+            {
+              "name": "Create Test 4 - Youssef (age 58)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lab_id\": \"{{lab_mokhtabar_id}}\",\n  \"national_id\": \"{{youssef_national_id}}\",\n  \"features\": {\n    \"age\": 58,\n    \"sex\": 1,\n    \"chest_pain_type\": 2,\n    \"resting_bp_s\": 136,\n    \"cholesterol\": 164,\n    \"fasting_blood_sugar\": 0,\n    \"resting_ecg\": 1,\n    \"max_heart_rate\": 99,\n    \"exercise_angina\": 1,\n    \"oldpeak\": 2.0,\n    \"st_slope\": 2\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests"]
+                }
+              }
+            },
+            {
+              "name": "Create Test 5 - Youssef (age 49)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lab_id\": \"{{lab_mokhtabar_id}}\",\n  \"national_id\": \"{{youssef_national_id}}\",\n  \"features\": {\n    \"age\": 49,\n    \"sex\": 1,\n    \"chest_pain_type\": 4,\n    \"resting_bp_s\": 140,\n    \"cholesterol\": 234,\n    \"fasting_blood_sugar\": 0,\n    \"resting_ecg\": 0,\n    \"max_heart_rate\": 140,\n    \"exercise_angina\": 1,\n    \"oldpeak\": 1.0,\n    \"st_slope\": 2\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Omar's Tests (Low Risk)",
+          "item": [
+            {
+              "name": "Create Test 1 - Omar (age 40)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "const json = pm.response.json();",
+                      "if (pm.response.code === 201 && json.data) {",
+                      "    pm.collectionVariables.set('labtest_omar_1_id', json.data.id);",
+                      "    console.log('✅ Omar Test 1 ID:', json.data.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lab_id\": \"{{lab_borg_id}}\",\n  \"national_id\": \"{{omar_national_id}}\",\n  \"features\": {\n    \"age\": 40,\n    \"sex\": 1,\n    \"chest_pain_type\": 2,\n    \"resting_bp_s\": 140,\n    \"cholesterol\": 289,\n    \"fasting_blood_sugar\": 0,\n    \"resting_ecg\": 0,\n    \"max_heart_rate\": 172,\n    \"exercise_angina\": 0,\n    \"oldpeak\": 0.0,\n    \"st_slope\": 1\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests"]
+                }
+              }
+            },
+            {
+              "name": "Create Test 2 - Omar (age 37)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lab_id\": \"{{lab_borg_id}}\",\n  \"national_id\": \"{{omar_national_id}}\",\n  \"features\": {\n    \"age\": 37,\n    \"sex\": 1,\n    \"chest_pain_type\": 2,\n    \"resting_bp_s\": 130,\n    \"cholesterol\": 283,\n    \"fasting_blood_sugar\": 0,\n    \"resting_ecg\": 1,\n    \"max_heart_rate\": 98,\n    \"exercise_angina\": 0,\n    \"oldpeak\": 0.0,\n    \"st_slope\": 1\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests"]
+                }
+              }
+            },
+            {
+              "name": "Create Test 3 - Omar (age 54)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lab_id\": \"{{lab_borg_id}}\",\n  \"national_id\": \"{{omar_national_id}}\",\n  \"features\": {\n    \"age\": 54,\n    \"sex\": 1,\n    \"chest_pain_type\": 3,\n    \"resting_bp_s\": 150,\n    \"cholesterol\": 195,\n    \"fasting_blood_sugar\": 0,\n    \"resting_ecg\": 0,\n    \"max_heart_rate\": 122,\n    \"exercise_angina\": 0,\n    \"oldpeak\": 0.0,\n    \"st_slope\": 1\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests"]
+                }
+              }
+            },
+            {
+              "name": "Create Test 4 - Omar (age 39)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lab_id\": \"{{lab_borg_id}}\",\n  \"national_id\": \"{{omar_national_id}}\",\n  \"features\": {\n    \"age\": 39,\n    \"sex\": 1,\n    \"chest_pain_type\": 3,\n    \"resting_bp_s\": 120,\n    \"cholesterol\": 339,\n    \"fasting_blood_sugar\": 0,\n    \"resting_ecg\": 0,\n    \"max_heart_rate\": 170,\n    \"exercise_angina\": 0,\n    \"oldpeak\": 0.0,\n    \"st_slope\": 1\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests"]
+                }
+              }
+            },
+            {
+              "name": "Create Test 5 - Omar (age 45)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"lab_id\": \"{{lab_borg_id}}\",\n  \"national_id\": \"{{omar_national_id}}\",\n  \"features\": {\n    \"age\": 45,\n    \"sex\": 0,\n    \"chest_pain_type\": 2,\n    \"resting_bp_s\": 130,\n    \"cholesterol\": 237,\n    \"fasting_blood_sugar\": 0,\n    \"resting_ecg\": 0,\n    \"max_heart_rate\": 170,\n    \"exercise_angina\": 0,\n    \"oldpeak\": 0.0,\n    \"st_slope\": 1\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Queries & Updates",
+          "item": [
+            {
+              "name": "Get All Lab Tests",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/labtests?page=1&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests"],
+                  "query": [
+                    { "key": "page", "value": "1" },
+                    { "key": "limit", "value": "10" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Get Lab Test by ID (Youssef Test 1)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/labtests/{{labtest_youssef_1_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests", "{{labtest_youssef_1_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Get All Tests - Youssef",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/labtests/patient/{{youssef_national_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests", "patient", "{{youssef_national_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Get Latest Test - Youssef",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/labtests/patient/{{youssef_national_id}}/latest",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests", "patient", "{{youssef_national_id}}", "latest"]
+                }
+              }
+            },
+            {
+              "name": "Get All Tests - Omar",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/labtests/patient/{{omar_national_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests", "patient", "{{omar_national_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Get Latest Test - Omar",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/labtests/patient/{{omar_national_id}}/latest",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests", "patient", "{{omar_national_id}}", "latest"]
+                }
+              }
+            },
+            {
+              "name": "Get Tests by Lab - Al Mokhtabar",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/labtests/lab/{{lab_mokhtabar_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests", "lab", "{{lab_mokhtabar_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Get Tests by Lab - AL Borg",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/labtests/lab/{{lab_borg_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests", "lab", "{{lab_borg_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Update Prediction - Youssef Test 1 (High Risk 85%)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"prediction_result\": \"High Risk\",\n  \"prediction_percentage\": 85\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests/{{labtest_youssef_1_id}}/prediction",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests", "{{labtest_youssef_1_id}}", "prediction"]
+                }
+              }
+            },
+            {
+              "name": "Update Prediction - Omar Test 1 (Low Risk 12%)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"prediction_result\": \"Low Risk\",\n  \"prediction_percentage\": 12\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests/{{labtest_omar_1_id}}/prediction",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests", "{{labtest_omar_1_id}}", "prediction"]
+                }
+              }
+            },
+            {
+              "name": "Update Lab Test (example)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"features\": {\n    \"age\": 50\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/labtests/{{labtest_youssef_1_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests", "{{labtest_youssef_1_id}}"]
+                }
+              }
+            },
+            {
+              "name": "Delete Lab Test (example)",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+                "url": {
+                  "raw": "{{base_url}}/api/labtests/REPLACE_WITH_ID",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "labtests", "REPLACE_WITH_ID"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🏨 Hospitals",
+      "item": [
+        {
+          "name": "Create Hospital - Elite (Alexandria)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('hospital_elite_id', json.data.id);",
+                  "    console.log('✅ Elite Hospital ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Elite Hospital\",\n  \"area\": \"Alexandria , Egypt\",\n  \"google_maps_link\": \"https://www.google.com/maps/place/Elite+Hospital/@31.1716947,29.9435354,17z/data=!3m1!4b1!4m6!3m5!1s0x14f5c310e1d19295:0xc973dcd1396e7e2c!8m2!3d31.1716947!4d29.9435354!16s%2Fg%2F11c2090xx7?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/hospitals",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals"]
+            }
+          }
+        },
+        {
+          "name": "Create Hospital - Andalusia (Alexandria)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('hospital_andalusia_id', json.data.id);",
+                  "    console.log('✅ Andalusia Hospital ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Andalusia Hospitals\",\n  \"area\": \"Alexandria , Egypt\",\n  \"google_maps_link\": \"https://www.google.com/maps/place/%D9%85%D8%B3%D8%AA%D8%B4%D9%81%D9%89+%D8%A7%D9%86%D8%AF%D9%84%D8%B3%D9%8A%D9%87+%D8%A7%D9%84%D8%B4%D9%84%D8%A7%D9%84%D8%A7%D8%AA%E2%80%AD/@31.2034374,29.9071489,17z/data=!3m1!4b1!4m6!3m5!1s0x14f5c3950cfad54b:0xf7aa773c3377e341!8m2!3d31.2034328!4d29.9097238!16s%2Fg%2F11vkhh40wt?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/hospitals",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals"]
+            }
+          }
+        },
+        {
+          "name": "Create Hospital - Alexandria International",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('hospital_alex_intl_id', json.data.id);",
+                  "    console.log('✅ Alexandria International Hospital ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alexandria International Hospital\",\n  \"area\": \"Alexandria , Egypt\",\n  \"google_maps_link\": \"https://www.google.com/maps/place/Alexandria+International+Hospital/@31.2158459,29.9406886,18z/data=!3m1!4b1!4m6!3m5!1s0x14f5c49183568ae7:0xe2f0b90eb9c27c8d!8m2!3d31.2158436!4d29.9419761!16s%2Fg%2F1td0k105?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/hospitals",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals"]
+            }
+          }
+        },
+        {
+          "name": "Create Hospital - Al Salam (Cairo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('hospital_salam_id', json.data.id);",
+                  "    console.log('✅ Al Salam Hospital ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Al Salam Hospitals\",\n  \"area\": \"Cairo , Egypt\",\n  \"google_maps_link\": \"https://www.google.com/maps/place/As-Salam+International+Hospital+Maadi+Branch/@29.9849323,31.2277329,17z/data=!3m1!4b1!4m6!3m5!1s0x145847a50d83ab59:0x4c0e8e891bcf6265!8m2!3d29.9849277!4d31.2303078!16s%2Fg%2F1hm4rvcfh?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/hospitals",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals"]
+            }
+          }
+        },
+        {
+          "name": "Create Hospital - Saudi German (Cairo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('hospital_saudi_german_id', json.data.id);",
+                  "    console.log('✅ Saudi German Hospital ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Saudi German Hospital\",\n  \"area\": \"Cairo , Egypt\",\n  \"google_maps_link\": \"https://www.google.com/maps/place/Saudi+German+Hospital+Cairo/@30.1321626,31.3821633,17z/data=!3m1!4b1!4m6!3m5!1s0x1458179a924399f3:0x12850a8dc92b9a17!8m2!3d30.132158!4d31.3847382!16s%2Fg%2F11px3gf9td?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/hospitals",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals"]
+            }
+          }
+        },
+        {
+          "name": "Create Hospital - Arab Contractors (Cairo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (pm.response.code === 201 && json.data) {",
+                  "    pm.collectionVariables.set('hospital_arab_contractors_id', json.data.id);",
+                  "    console.log('✅ Arab Contractors Hospital ID:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Arab Contractors Hospital\",\n  \"area\": \"Cairo , Egypt\",\n  \"google_maps_link\": \"https://www.google.com/maps/place/Arab+Contractors+Medical+Centre/@30.0541945,31.2939542,17z/data=!4m6!3m5!1s0x14583c4000000001:0xb9013e8e0b1ba3e9!8m2!3d30.0541899!4d31.2965291!16s%2Fg%2F1tjbbsm5?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/hospitals",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals"]
+            }
+          }
+        },
+        {
+          "name": "Get All Hospitals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/hospitals?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Hospital by ID - Elite",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/hospitals/{{hospital_elite_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals", "{{hospital_elite_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Hospitals by Area - Alexandria",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/hospitals/area/Alexandria , Egypt",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals", "area", "Alexandria , Egypt"]
+            }
+          }
+        },
+        {
+          "name": "Get Hospitals by Area - Cairo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/hospitals/area/Cairo , Egypt",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals", "area", "Cairo , Egypt"]
+            }
+          }
+        },
+        {
+          "name": "Update Hospital - Elite (name)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Elite Hospital Alexandria\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/hospitals/{{hospital_elite_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals", "{{hospital_elite_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Hospital (example)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/hospitals/REPLACE_WITH_ID",
+              "host": ["{{base_url}}"],
+              "path": ["api", "hospitals", "REPLACE_WITH_ID"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
