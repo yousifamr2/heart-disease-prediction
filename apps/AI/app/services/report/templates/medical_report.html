@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Medical Report</title>
+
+<style>
+    body {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        margin: 30px;
+        color: #2c2c2c;
+        background: #fff;
+    }
+
+    h1, h2, h3 {
+        margin: 0;
+    }
+
+    /* HEADER */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .hospital-info {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .logo {
+        height: 60px;
+    }
+
+    /* TITLE */
+    .report-title {
+        text-align: center;
+        margin: 20px 0;
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    /* PATIENT TABLE */
+    .patient-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    .patient-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    .patient-table td.label {
+        background: #f5f5f5;
+        font-weight: bold;
+        width: 20%;
+    }
+
+    /* SECTION */
+    .section {
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+        border-left: 4px solid #2563eb;
+        padding-left: 10px;
+    }
+
+    /* RISK BOX */
+    .risk-box {
+        border: 1px solid #ccc;
+        padding: 15px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .risk-low {
+        border-left: 6px solid #16a34a;
+    }
+
+    .risk-moderate {
+        border-left: 6px solid #f59e0b;
+    }
+
+    .risk-high {
+        border-left: 6px solid #dc2626;
+    }
+
+    /* CHARTS */
+    .charts {
+        display: flex;
+        gap: 15px;
+    }
+
+    .chart-box {
+        flex: 1;
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .chart-box img {
+        max-width: 100%;
+    }
+
+    /* TEXT BOX */
+    .text-box {
+        border: 1px solid #ddd;
+        padding: 12px;
+        background: #fafafa;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    /* RECOMMENDATIONS */
+    .recommendations ul {
+        margin: 0;
+        padding-left: 18px;
+    }
+
+    .recommendations li {
+        margin-bottom: 6px;
+    }
+
+    /* DISCLAIMER */
+    .disclaimer {
+        margin-top: 25px;
+        font-size: 12px;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+        color: #555;
+    }
+
+    /* FOOTER */
+    .footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 11px;
+        color: #888;
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+    <div class="hospital-info">
+        <strong>HeartCare Medical Center</strong><br>
+        Cardiology Department<br>
+        Cairo, Egypt<br>
+        Phone: +20 XXX XXX XXXX
+    </div>
+    <img src="{{ logo_path }}" class="logo">
+</div>
+
+<div class="report-title">
+    HEART DISEASE RISK ASSESSMENT REPORT
+</div>
+
+<!-- PATIENT INFO -->
+
+<table class="patient-table">
+    <tr>
+        <td class="label">Patient Name</td>
+        <td>{{ patient_info.name }}</td>
+        <td class="label">Age</td>
+        <td>{{ patient_info.age }}</td>
+    </tr>
+    <tr>
+        <td class="label">Gender</td>
+        <td>{{ patient_info.gender }}</td>
+        <td class="label">Date</td>
+        <td>{{ generated_at }}</td>
+    </tr>
+    <tr>
+        <td class="label">Blood Pressure</td>
+        <td>{{ patient_info.bp }}</td>
+        <td class="label">Cholesterol</td>
+        <td>{{ patient_info.cholesterol }}</td>
+    </tr>
+</table>
+
+<!-- RISK RESULT -->
+
+<div class="section">
+    <div class="section-title">Risk Assessment</div>
+    <div class="risk-box 
+        {% if ui_risk_level == 'Low' %}risk-low
+        {% elif ui_risk_level == 'Moderate' %}risk-moderate
+        {% else %}risk-high
+        {% endif %}">
+        Probability: {{ probability }}% <br>
+        Classification: {{ ui_risk_level }}
+    </div>
+</div>
+
+<!-- CHARTS -->
+
+<div class="section">
+    <div class="section-title">Analysis</div>
+    <div class="charts">
+        <div class="chart-box">
+            <strong>Feature Importance</strong>
+            <img src="{{ feature_chart_b64 }}">
+        </div>
+        <div class="chart-box">
+            <strong>SHAP Explanation</strong>
+            <img src="{{ shap_chart_b64 }}">
+        </div>
+    </div>
+</div>
+
+<!-- EXPLANATION -->
+
+<div class="section">
+    <div class="section-title">Medical Interpretation</div>
+    <div class="text-box">
+        {{ explanation }}
+    </div>
+</div>
+
+<!-- RECOMMENDATIONS -->
+
+<div class="section recommendations">
+    <div class="section-title">Recommendations</div>
+    <div class="text-box">
+        <ul>
+            {% for rec in recommendations %}
+            <li>{{ rec }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- ALERT -->
+
+{% if decision == "high" %}
+
+<div class="section">
+    <div class="risk-box risk-high">
+        ⚠️ Clinical attention is recommended based on the current assessment.
+    </div>
+</div>
+{% endif %}
+
+<!-- DISCLAIMER -->
+
+<div class="disclaimer">
+    This report is generated using an AI-based predictive model. It is intended for informational purposes only and does not substitute professional medical advice, diagnosis, or treatment.
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+    Confidential Medical Report — Generated by AI System
+</div>
+
+</body>
+</html>

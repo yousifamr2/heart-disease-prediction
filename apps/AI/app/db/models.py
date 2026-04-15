@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, LargeBinary
+from sqlalchemy import Column, Integer, Float, String, LargeBinary, JSON
 from core.database import Base
 
 class PatientPrediction(Base):
@@ -16,6 +16,13 @@ class PatientPrediction(Base):
     exercise_angina = Column(Integer)
     oldpeak = Column(Float)
     ST_slope = Column(Integer)
-    
-    prediction = Column(Integer, nullable=True)
-    shap_image = Column(LargeBinary, nullable=True)
+
+    # ── Prediction Results ─────────────────────────────────────────────
+    prediction  = Column(Integer, nullable=True)   # 0 or 1 (binary from model)
+    probability = Column(Float,   nullable=True)   # 0.0 – 100.0 % from model
+    risk_level  = Column(String,  nullable=True)   # "Low Risk" / "Moderate Risk" / "High Risk"
+    decision    = Column(String,  nullable=True)   # "low" / "high" (data-driven @ 41%)
+
+    # ── Report Cache ───────────────────────────────────────────────────
+    shap_image      = Column(LargeBinary, nullable=True)
+    llm_report_json = Column(JSON,        nullable=True)

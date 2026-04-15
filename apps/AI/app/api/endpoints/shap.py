@@ -24,7 +24,8 @@ def show_shap(id: int, db: Session = Depends(get_db)):
         patient.oldpeak, patient.ST_slope
     ]
 
-    image_bytes = ml_service.generate_shap_image(data)
+    risk_score, shap_data = ml_service.get_risk_and_shap(data)
+    image_bytes = ml_service.generate_shap_image(shap_data)
 
     patient.shap_image = image_bytes
     db.commit()
