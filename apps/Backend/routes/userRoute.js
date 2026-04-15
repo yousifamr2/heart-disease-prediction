@@ -1,46 +1,56 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const User = require("../models/user");
-const { validateUser } = require("../middleware/validation");
+const prisma = require("../config/prisma");
+const { validate } = require("../middleware/validate");
+const { handlePrismaError } = require("../middleware/prismaErrors");
+const { userCreateSchema, userUpdateSchema } = require("../schemas/user.schema");
 const { authenticate } = require("../middleware/auth");
 
 const router = express.Router();
 
-// Create new user (protected - for user management, not public registration)
-router.post("/", authenticate, validateUser, async (req, res, next) => {
+// Create new user (protected — admin only)
+router.post("/", authenticate, validate(userCreateSchema), async (req, res, next) => {
   try {
-    const { password, ...rest } = req.body;
+    const { national_id, username, email, password } = req.body;
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    const user = await User.create({ ...rest, password: hashedPassword });
-    res.status(201).json({ success: true, data: user });
+
+    const user = await prisma.user.create({
+      data: { national_id, username, email: email.toLowerCase(), password: hashedPassword },
+    });
+
+    const { password: _, ...userWithoutPassword } = user;
+    res.status(201).json({ success: true, data: userWithoutPassword });
   } catch (err) {
+    if (handlePrismaError(err, res)) return;
     next(err);
   }
 });
 
 // Get all users (with pagination)
-router.get("/", async (req, res, next) => {
+router.get("/", authenticate, async (req, res, next) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
     const skip = (page - 1) * limit;
 
-    const total = await User.countDocuments();
-    const users = await User.find()
-      .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 });
+    const [total, users] = await Promise.all([
+      prisma.user.count(),
+      prisma.user.findMany({
+        skip,
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true, national_id: true, username: true,
+          email: true, createdAt: true, updatedAt: true,
+        },
+      }),
+    ]);
 
     res.json({
       success: true,
       data: users,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit)
-      }
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
   } catch (err) {
     next(err);
@@ -48,12 +58,16 @@ router.get("/", async (req, res, next) => {
 });
 
 // Get single user by id
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", authenticate, async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
-    }
+    const user = await prisma.user.findUnique({
+      where: { id: req.params.id },
+      select: {
+        id: true, national_id: true, username: true,
+        email: true, createdAt: true, updatedAt: true,
+      },
+    });
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
     res.json({ success: true, data: user });
   } catch (err) {
     next(err);
@@ -61,17 +75,26 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // Update user (protected)
-router.put("/:id", authenticate, async (req, res, next) => {
+router.put("/:id", authenticate, validate(userUpdateSchema), async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+    const updateData = { ...req.body };
+    if (updateData.password) {
+      const salt = await bcrypt.genSalt(10);
+      updateData.password = await bcrypt.hash(updateData.password, salt);
     }
+    if (updateData.email) updateData.email = updateData.email.toLowerCase();
+
+    const user = await prisma.user.update({
+      where: { id: req.params.id },
+      data: updateData,
+      select: {
+        id: true, national_id: true, username: true,
+        email: true, createdAt: true, updatedAt: true,
+      },
+    });
     res.json({ success: true, data: user });
   } catch (err) {
+    if (handlePrismaError(err, res)) return;
     next(err);
   }
 });
@@ -79,16 +102,12 @@ router.put("/:id", authenticate, async (req, res, next) => {
 // Delete user (protected)
 router.delete("/:id", authenticate, async (req, res, next) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
-    }
-    res.json({ success: true, message: "User deleted" });
+    await prisma.user.delete({ where: { id: req.params.id } });
+    res.json({ success: true, message: "User deleted successfully" });
   } catch (err) {
+    if (handlePrismaError(err, res)) return;
     next(err);
   }
 });
 
 module.exports = router;
-
-

@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const prisma = require("../config/prisma");
 
 // Middleware to verify JWT token
 const authenticate = async (req, res, next) => {
@@ -27,9 +27,11 @@ const authenticate = async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Find user and attach to request
-    const user = await User.findById(decoded.userId).select("-password");
-    
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: { id: true, national_id: true, username: true, email: true },
+    });
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -37,7 +39,6 @@ const authenticate = async (req, res, next) => {
       });
     }
 
-    // Attach user to request object
     req.user = user;
     next();
   } catch (err) {

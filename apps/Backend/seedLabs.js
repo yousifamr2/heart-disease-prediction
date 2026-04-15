@@ -1,78 +1,62 @@
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const Lab = require("./models/lab");
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 
-dotenv.config();
-
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log("MongoDB Connected Successfully!");
-  } catch (err) {
-    console.error("MongoDB Connection Error: ", err);
-    process.exit(1);
-  }
-};
+const prisma = require("./config/prisma");
 
 const labs = [
   {
     name: "Al Mokhtabar labs",
     lab_code: "Al Mokhtabar 123",
-    address: "Alexandria , 228 Port Said Street, Zamzam Tower - Sporting"
+    address: "Alexandria , 228 Port Said Street, Zamzam Tower - Sporting",
   },
   {
     name: "AL Borg Labs",
     lab_code: "AL Borg 123",
-    address: "Alexandria , 14 Faculty Of Medicine Street, Raml Station"
+    address: "Alexandria , 14 Faculty Of Medicine Street, Raml Station",
   },
   {
     name: "Hassab Labs",
     lab_code: "Hassab 123",
-    address: "Alexandria , 405 Al Horreya Road, Abu Qir Street - Sidi Gaber"
+    address: "Alexandria , 405 Al Horreya Road, Abu Qir Street - Sidi Gaber",
   },
   {
     name: "Royal Labs",
     lab_code: "Royal 123",
-    address: "Alexandria ,  36 Saad Zaghloul Street, Raml Station, above Chicorel, 3rd floor"
+    address: "Alexandria , 36 Saad Zaghloul Street, Raml Station, above Chicorel, 3rd floor",
   },
   {
     name: "Al Shams Labs",
     lab_code: "Al Shams 123",
-    address: "Alexandria , 86 Moharram Bek Street, in Front Of The Old Awlad El Sheikh Mosque  "
+    address: "Alexandria , 86 Moharram Bek Street, in Front Of The Old Awlad El Sheikh Mosque",
   },
   {
     name: "Al Nile Labs",
     lab_code: "Al Nile 123",
-    address: "59 Safia Zaghloul Street, Raml Station, Alex Tower Commercial Building - Raml Station"
-  }
-
+    address: "59 Safia Zaghloul Street, Raml Station, Alex Tower Commercial Building - Raml Station",
+  },
 ];
 
 const seedLabs = async () => {
   try {
-    await connectDB();
+    await prisma.$connect();
+    console.log("PostgreSQL (Neon) Connected Successfully!");
 
-    // Delete existing labs (optional - comment out if you want to keep existing data)
-    await Lab.deleteMany({});
+    await prisma.lab.deleteMany({});
     console.log("Existing labs deleted");
 
-    // Insert new labs
-    const createdLabs = await Lab.insertMany(labs);
-    console.log(`${createdLabs.length} labs seeded successfully!`);
+    const created = await prisma.lab.createMany({ data: labs });
+    console.log(`${created.count} labs seeded successfully!`);
 
-    // Display seeded labs
-    console.log("\nSeeded Labs:"); 
-    createdLabs.forEach((lab, index) => {
-      console.log(`${index + 1}. ${lab.name} - Code: ${lab.lab_code}`);
-    });
+    const all = await prisma.lab.findMany({ orderBy: { createdAt: "asc" } });
+    all.forEach((lab, i) =>
+      console.log(`${i + 1}. ${lab.name} — Code: ${lab.lab_code} — ID: ${lab.id}`)
+    );
 
     process.exit(0);
   } catch (err) {
-    console.error("Error seeding labs:", err);
+    console.error("Error seeding labs:", err.message);
     process.exit(1);
   }
 };
 
-// Run seed function
 seedLabs();
-
