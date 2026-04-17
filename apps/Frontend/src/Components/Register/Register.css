@@ -1,0 +1,125 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+/* container */
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  width: 100%;
+  background: linear-gradient(135deg, #1198B7, #0f7f99);
+  gap: 20px;
+}
+
+/* card */
+.register-card {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  border-radius: 0px; /* مهم عشان full screen */
+}
+
+/* LEFT */
+.left-side {
+  display: flex;
+  align-items: flex-start;
+  padding: 40px;
+  border-radius: 10px;
+  
+}
+
+/* logo */
+.logo-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 50px;
+}
+
+.logo-title-wrapper h1 {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f4c5c;
+}
+
+/* RIGHT */
+.right-side {
+  background: #f5f9ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  border-radius: 10px;
+}
+
+/* form */
+.register-content {
+  width: 100%;
+  max-width: 360px;
+}
+
+.register-content h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 32px;
+  color: #0f4c5c;
+}
+
+/* inputs */
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  width: 100%;
+  height: 45px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0 40px 0 10px;
+  outline: none;
+}
+
+/* icons */
+.input-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: gray;
+}
+
+/* button */
+.btn-gradient {
+  width: 100%;
+  height: 45px;
+  border: none;
+  border-radius: 8px;
+  background: #1198B7;
+  color: white;
+}
+
+.btn-gradient:hover {
+  background: #0f7f99;
+}
+
+/* link */
+.login-link {
+  text-align: center;
+  margin-top: 15px;
+  color: #7a8a99;
+}
+
+.login-link a {
+  color: #1198B7;
+  text-decoration: none;
+}
+
+/* IMPORTANT: no media queries needed */

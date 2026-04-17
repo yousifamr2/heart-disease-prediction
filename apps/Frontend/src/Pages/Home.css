@@ -1,0 +1,159 @@
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+}
+.main {
+  min-height: 100vh;
+}
+
+
+/* HERO CONTAINER */
+.content {
+  position: relative;
+  height: calc(100vh - 40px);
+  margin: 20px;
+  border-radius: 35px;
+
+  background: url("../Image/heart.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  overflow: hidden;
+}
+
+/* TEXT CONTAINER */
+.text {
+  position: absolute;
+  top: 90px;
+  left: 80px;
+  width: max-content;
+  z-index: 2;
+}
+
+/* TITLE */
+.text h2 {
+  white-space: nowrap;
+  font-size: clamp(28px, 3vw, 48px);
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+
+  line-height: 100%;
+  text-transform: capitalize;
+
+  background: linear-gradient(90deg, #21444B 0%, #1198B7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* PARAGRAPH */
+.text p {
+  margin-top: 16px;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 50px;
+  text-transform: capitalize;
+
+  background: linear-gradient(
+    180deg,
+    rgba(18, 83, 94, 0.6) 0%,
+    rgba(17, 152, 183, 0.675) 53.37%
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  max-width: 551px;
+  height: 150px;
+}
+
+.corner {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+
+  width: 340px;
+  height: 220px;
+
+  background: white;
+
+  border-top-left-radius: 160px;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-shadow: -15px -15px 30px rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
+}
+
+.corner::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: 0;
+
+  width: 120px;
+  height: 120px;
+
+  background: transparent;
+
+  border-bottom-right-radius: 120px;
+
+  box-shadow: 30px 30px 0 30px white;
+}
+
+/* INFO BOX */
+.info-box {
+  background: linear-gradient(to right, #3f7d8a, #64aad0);
+  color: white;
+
+  padding: 18px 28px;
+  border-radius: 30px;
+
+  text-align: center;
+
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.18);
+
+  transform: translateY(-10px);
+}
+
+
+
+/* BUTTON */
+.know-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+
+  .text {
+    top: 50px;
+    left: 25px;
+    right: 25px;
+  }
+
+  .text h2 {
+    font-size: 30px;
+  }
+
+  .corner {
+    width: 220px;
+    height: 160px;
+    border-top-left-radius: 120px;
+  }
+
+  .info-box {
+    font-size: 12px;
+    padding: 12px 16px;
+  }
+}

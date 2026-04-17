@@ -1,0 +1,350 @@
+:root {
+  --primary: #1198b7;
+  --secondary: #4ea0b1;
+  --bg-main: #f4f9fc;
+  --text-title: #0f3d4c;
+  --text-body: #5f7d8a;
+  --border-light: #e0eef3;
+}
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(
+    to right,
+    rgb(78, 160, 177, 0.4) 0%,
+    rgb(78, 160, 177, 0.4) 2%,
+    #f4f9fc 7%,
+    #f4f9fc 93%,
+    rgb(78, 160, 177, 0.4) 98%,
+    rgb(78, 160, 177, 0.4) 100%
+  );
+}
+.home-page {
+  margin: 0 auto;
+} /* Navbar */
+.brand-name {
+  color: var(--text-title);
+}
+.nav-item {
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-title);
+}
+.profile {
+  width: 15%;
+}
+.logo {
+  width: 15%;
+}
+.brand {
+  font-family: "Arial Narrow Bold", sans-serif;
+  font-weight: bold;
+  color: rgb(33, 68, 75);
+}
+nav li {
+  color: #0f3d4c;
+}
+.custom-btn {
+  background-color: #77bac5 !important;
+  border: none;
+  color: #fff !important;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.custom-btn:hover {
+  background-color: #0f86a3 !important;
+  box-shadow: 0 6px 15px rgba(17, 152, 183, 0.35);
+  transform: translateY(-1px);
+} /* للزرار الفاضي */
+.custom-btn-outline {
+  background-color: transparent;
+  border: 1.5px solid #1198b7 !important;
+  color: #1198b7;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.custom-btn-outline:hover {
+  background-color: #1198b7 !important;
+  color: #fff !important;
+  box-shadow: 0 6px 15px rgba(17, 152, 183, 0.25);
+} /* Hero */
+.hero {
+  padding: 80px 20px 60px;
+}
+.hero-title {
+  background: linear-gradient(to right, #21444b 40%, #1198b7 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-top: 0px;
+  letter-spacing: 3px;
+}
+.hero-subtitle {
+  background: linear-gradient(
+    to bottom,
+    rgb(120, 195, 216) 50%,
+    #12535ecc 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-bottom: 0;
+}
+.hero-buttons {
+  margin-top: 25px;
+} /* Result Section */
+.result-section {
+  padding: 40px 20px 20px;
+}
+.result-title {
+  font-weight: 600;
+  color: #21444b;
+  margin-bottom: 5px;
+}
+.result-note {
+  font-size: 14px;
+  color: #5f7d8a;
+  margin-bottom: 30px;
+} /* Card */
+.result-section {
+  margin-bottom: 100px;
+}
+.result-title {
+  background: linear-gradient(to right, #21444b 40%, #1198b7 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-top: 0px;
+  letter-spacing: 3px;
+}
+.result-note {
+  /*background: linear-gradient(
+    to bottom,
+    rgb(120, 195, 216) 50%,
+    #12535ecc 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;*/
+  font-size: 14px;
+  color: #5f7d8a;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+.result-card {
+  width: 420px;
+  max-width: 90%;
+  padding: 20px;
+  border-radius: 30px;
+  background: linear-gradient(
+    to right,
+    rgba(120, 195, 216, 0.9),
+    rgba(18, 83, 94, 0.85)
+  );
+  color: white;
+  box-shadow: 0 8px 25px rgba(17, 152, 183, 0.25);
+  margin-bottom: 50px;
+}
+.result-label {
+  font-size: 18px;
+  opacity: 0.9;
+  margin-bottom: 5px;
+}
+.result-value {
+  font-size: 50px;
+  color: red;
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 4%;
+  line-height: 100%;
+  font-family: sans-serif;
+}
+.result-status {
+  font-size: 18px;
+  margin-top: 8px;
+  opacity: 0.95;
+}
+
+.effect-title {
+  background: linear-gradient(to right, #21444b 40%, #1198b7 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  letter-spacing: 3px;
+}
+.cap-effect {
+  background: linear-gradient(to right, #21444b 40%, #1198b7 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin: 50px;
+}
+/**/
+/* Hospitals Section */
+/* Hospitals Section */
+.hospitals-section {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.city-title {
+  display: inline-block;
+  padding: 6px 20px;
+  border: 3px solid #77bac5;
+  border-radius: 10px;
+  background: linear-gradient(to right, #21444b 10%, #5f8f8f 50%, #4ea0b1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-weight: 600;
+  margin-bottom: 20px;
+  left: 20%;
+}
+.city-tittle {
+  border-bottom: 3px solid#77bac5;
+}
+/* Container */
+.hospitals-container {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+/* Card */
+.hospital-card {
+  display: block;
+  width: 260px;
+  padding: 12px;
+  text-decoration: none;
+  color: inherit;
+  background: linear-gradient(to bottom, rgb(221, 239, 247));
+  /*شمالفوق+يمينتحت*/
+  border-radius: 40px 10px 40px 10px;
+  box-shadow: 15px 11px 10px rgba(17, 152, 183, 0.3);
+  transition: 0.3s;
+  -webkit-border-radius: 40px 10px 40px 10px;
+  -moz-border-radius: 40px 10px 40px 10px;
+  -ms-border-radius: 40px 10px 40px 10px;
+  -o-border-radius: 40px 10px 40px 10px;
+  border: 4px solid #77bac5;
+}
+
+.hospital-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  cursor: pointer;
+}
+
+/* Title */
+.hospital-name {
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(to right, #21444b 10%, #5f8f8f 50%, #4ea0b1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-bottom: 10px;
+
+  text-shadow: 10px 8px 5px rgba(0, 0, 0, 0.25);
+}
+
+.location {
+  border-bottom: 4px solid #77bac5;
+  color: #21444bcc;
+  margin: auto;
+}
+.location_icon {
+  width: 8%;
+}
+.location_name {
+  font-size: 13px;
+}
+/* Map */
+.hospital-map {
+  width: 100%;
+  height: 130px;
+  border: none;
+
+  /* نفس اتجاه الكارد */
+  border-radius: 30px 10px 30px 10px;
+}
+
+/* Footer */
+.footer {
+  margin-top: 60px;
+  background-color: #77bac5;
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+  border-top-left-radius: 30px; /* حافة فوق يسار مستديرة */
+  border-top-right-radius: 30px; /* حافة فوق يمين مستديرة */
+  border-bottom-right-radius: 30px;
+  border-bottom-left-radius: 30px;
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1); /* optional: يخلي الفوتر يبرز */
+  margin-top: 60px;
+  margin: 10px;
+  padding: 40px 0 20px;
+} /* Buttons */
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+.btn-outline-primary {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.footer-text {
+  font-size: 14px;
+  opacity: 0.9;
+  color: #21444b;
+  margin-top: 15px;
+}
+.footer-title {
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #21444b;
+}
+.footer-list {
+  list-style: none;
+  padding: 0;
+  font-size: 14px;
+}
+.footer-list li {
+  margin-bottom: 8px;
+  cursor: pointer;
+  opacity: 0.9;
+  color: #21444b;
+  margin-bottom: 15px;
+}
+.footer-list li:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+.social-icons i {
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.social-icons i:hover {
+  transform: scale(1.15);
+}
+.footer-line {
+  border-color: rgba(255, 255, 255, 0.3);
+  margin: 25px 0 15px;
+}
+.copyright {
+  font-size: 13px;
+  opacity: 0.85;
+  color: #21444b;
+}
