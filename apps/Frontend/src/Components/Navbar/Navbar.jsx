@@ -10,6 +10,7 @@ export default function Navbar() {
   const location = useLocation();
 
   const [isLogged, setIsLogged] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   const isProfilePage = location.pathname === "/profile";
 
@@ -37,30 +38,29 @@ export default function Navbar() {
       <button
         className="navbar-toggler"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarContent"
+        onClick={() => setIsNavOpen(!isNavOpen)}
       >
         <span className="navbar-toggler-icon"></span>
       </button>
 
       {/* Content */}
       <div
-        className="collapse navbar-collapse justify-content-between"
+        className={`collapse navbar-collapse justify-content-between ${isNavOpen ? "show" : ""}`}
         id="navbarContent"
       >
 
         {/* Links */}
         <ul className="navbar-nav mx-auto text-center gap-lg-4">
-          <li className="nav-item">
+          <li className="nav-item" onClick={() => setIsNavOpen(false)}>
             <Link className="nav-link" to="/the_general">HOME</Link>
           </li>
-          <li className="nav-item">
+          <li className="nav-item" onClick={() => setIsNavOpen(false)}>
             <Link className="nav-link" to="/docs">DOCS</Link>
           </li>
-          <li className="nav-item">
+          <li className="nav-item" onClick={() => setIsNavOpen(false)}>
             <Link className="nav-link" to="/heart">HEART</Link>
           </li>
-          <li className="nav-item">
+          <li className="nav-item" onClick={() => setIsNavOpen(false)}>
             <Link className="nav-link" to="/about">ABOUT</Link>
           </li>
         </ul>

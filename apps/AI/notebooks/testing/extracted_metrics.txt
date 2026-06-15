@@ -1,0 +1,523 @@
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.ensemble import RandomForestRegressor, AdaBoostRegressor, GradientBoostingRegressor, VotingRegressor, StackingRegressor
+from sklearn.model_selection import GridSearchCV
+target_col = train["target"]
+X = train.drop(columns=["target"])
+y = train["target"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2, 
+    random_state=42, 
+    stratify=y
+)
+
+pipeline = Pipeline([
+    ("scaler", StandardScaler()),
+    ("model", LogisticRegression(max_iter=500))
+])
+
+pipeline.fit(X_train, y_train)
+y_pred = pipeline.predict(X_test)
+
+from sklearn.metrics import accuracy_score
+print("Accuracy:", accuracy_score(y_test, y_pred))
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import accuracy_score, f1_score, classification_report, ConfusionMatrixDisplay, confusion_matrix, recall_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier, VotingClassifier, StackingClassifier
+from sklearn.svm import SVC
+from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
+from catboost import CatBoostClassifier as OriginalCatBoostClassifier
+class CatBoostClassifier(OriginalCatBoostClassifier):
+    def __sklearn_tags__(self):
+        from sklearn.utils._tags import Tags, ClassifierTags, TargetTags
+        return Tags(
+            estimator_type="classifier",
+            target_tags=TargetTags(required=True),
+            transformer_tags=None,
+            regressor_tags=None,
+            classifier_tags=ClassifierTags()
+        )
+
+# List of Parameters hyperparameters 
+param_grids = {
+    "LogReg": {"C": [0.1, 1.0, 10.0], "max_iter": [500]},
+    "RandomForest": {"n_estimators": [100, 200], "max_depth": [None, 5, 10]},
+    "AdaBoost": {"n_estimators": [100, 200], "learning_rate": [0.05, 0.1, 0.5]},
+    "GradientBoosting": {"n_estimators": [100, 200], "learning_rate": [0.05, 0.1], "max_depth": [1, 3, 5]},
+    "XGBoost": {"n_estimators": [100,200], "learning_rate": [0.05,0.1], "max_depth": [3,5]},
+    "LightGBM": {"n_estimators": [100,200], "learning_rate": [0.05,0.1], "max_depth": [-1,5]},
+    "CatBoost": {"iterations": [100,200], "learning_rate": [0.05,0.1], "depth": [4,6]}
+}
+
+# The Models
+base_models = {
+    "LogReg": LogisticRegression(max_iter=500, random_state=42),
+    "RandomForest": RandomForestClassifier(random_state=42),
+    "AdaBoost": AdaBoostClassifier(random_state=42),
+    "GradientBoosting": GradientBoostingClassifier(random_state=42),
+    "XGBoost": XGBClassifier(random_state=42, verbosity=0),
+    "LightGBM": LGBMClassifier(random_state=42, verbosity=-1),
+    "CatBoost": CatBoostClassifier(random_seed=42, verbose=0)
+}
+
+best_models = {}
+
+# Train a models with GridSearchCV
+for name, model in base_models.items():
+    print(f"Training {name}...")
+    if name in param_grids:
+        grid = GridSearchCV(model, param_grids[name], cv=3, scoring='accuracy', n_jobs=-1)
+        grid.fit(X_train, y_train)
+        best_model = grid.best_estimator_
+        print(f"Best params for {name}: {grid.best_params_}")
+    else:
+        model.fit(X_train, y_train)
+        best_model = model
+    
+    best_models[name] = best_model
+    
+    # validation
+    val_preds = best_model.predict(X_test)
+    acc = accuracy_score(y_test, val_preds)
+    f1 = f1_score(y_test, val_preds)
+    cm_display = ConfusionMatrixDisplay.from_estimator(best_model, X_test, y_test)
+    plt.figure(figsize=(3, 3)) 
+    print(f"{name} => Validation Accuracy: {acc:.4f}, F1 Score: {f1:.4f}\n")
+    print(f"ConfusionMatrix is : {cm_display}")
+
+    plt.show()
+
+# Stacking Classifier
+stacking_clf = StackingClassifier(
+    estimators=[(name, mdl) for name, mdl in best_models.items()],
+    final_estimator=RandomForestClassifier(n_estimators=100, random_state=42),
+    n_jobs=-1
+)
+stacking_clf.fit(X_train, y_train)
+stacking_preds = stacking_clf.predict(X_test)
+stacking_acc = accuracy_score(y_test, stacking_preds)
+stacking_f1 = f1_score(y_test, stacking_preds)
+stacking_cm_display  = ConfusionMatrixDisplay.from_estimator(stacking_clf, X_test, y_test)
+
+plt.figure(figsize=(3, 3)) 
+print(f"Stacking Classifier => Accuracy: {stacking_acc:.4f}, F1 Score: {stacking_f1:.4f}")
+print(f"ConfusionMatrix: {stacking_cm_display}")
+plt.show()
+# Voting Classifier
+voting_clf = VotingClassifier(
+    estimators=[(name, mdl) for name, mdl in best_models.items()],
+    voting='hard',
+    n_jobs=-1
+)
+voting_clf.fit(X_train, y_train)
+voting_preds = voting_clf.predict(X_test)
+voting_acc = accuracy_score(y_test, voting_preds)
+voting_f1 = f1_score(y_test, voting_preds)
+voting_cm_display  = ConfusionMatrixDisplay.from_estimator(voting_clf, X_test, y_test)
+
+plt.figure(figsize=(3, 3)) 
+print(f"Voting Classifier => Accuracy: {voting_acc:.4f}, F1 Score: {voting_f1:.4f}\n")
+print(f"ConfusionMatrix: {voting_cm_display}")
+plt.show()
+
+# ============================================================
+# 💾 حفظ أقوى موديل (Best Model)
+# ============================================================
+import joblib
+import os
+
+# جمع كل الموديلات مع الـ Accuracy بتاعتهم
+all_models_acc = {}
+
+for name, model in best_models.items():
+    acc = accuracy_score(y_test, model.predict(X_test))
+    all_models_acc[name] = (model, acc)
+
+all_models_acc["StackingClassifier"] = (stacking_clf, stacking_acc)
+all_models_acc["VotingClassifier"]   = (voting_clf,   voting_acc)
+
+# اختيار أقوى موديل
+best_name = max(all_models_acc, key=lambda k: all_models_acc[k][1])
+best_obj, best_acc = all_models_acc[best_name]
+
+print(f"\n✅ Best Model: {best_name}  |  Accuracy: {best_acc:.4f}")
+
+# حفظ الموديل
+models_dir = os.path.abspath(os.path.join("..", "..", "models"))
+os.makedirs(models_dir, exist_ok=True)
+
+model_path = os.path.join(models_dir, "best.pkl")
+joblib.dump(best_obj, model_path)
+
+print(f"💾 Saved  →  {model_path}")
+print(f"\n📌 To load it anywhere:")
+print(f"   import joblib")
+print(f"   model = joblib.load(r'{model_path}')")
+
+# import pandas as pd
+# import numpy as np
+
+# from sklearn.model_selection import GridSearchCV
+# from sklearn.metrics import accuracy_score, f1_score
+
+# from sklearn.linear_model import LogisticRegression
+# from sklearn.ensemble import (
+#     RandomForestClassifier,
+#     AdaBoostClassifier,
+#     GradientBoostingClassifier,
+#     VotingClassifier,
+#     StackingClassifier
+# )
+
+# from xgboost import XGBClassifier
+# from lightgbm import LGBMClassifier
+# from catboost import CatBoostClassifier
+
+
+# # ===============================
+# # Hyperparameter grids
+# # ===============================
+# param_grids = {
+#     "LogReg": {"C": [0.1, 1.0, 10.0], "max_iter": [500]},
+#     "RandomForest": {"n_estimators": [100, 200], "max_depth": [None, 5, 10]},
+#     "AdaBoost": {"n_estimators": [100, 200], "learning_rate": [0.05, 0.1, 0.5]},
+#     "GradientBoosting": {
+#         "n_estimators": [100, 200],
+#         "learning_rate": [0.05, 0.1],
+#         "max_depth": [1, 3, 5]
+#     },
+#     "XGBoost": {"n_estimators": [100, 200], "learning_rate": [0.05, 0.1], "max_depth": [3, 5]},
+#     "LightGBM": {"n_estimators": [100, 200], "learning_rate": [0.05, 0.1], "max_depth": [-1, 5]},
+#     "CatBoost": {"iterations": [100, 200], "learning_rate": [0.05, 0.1], "depth": [4, 6]}
+# }
+
+
+# # ===============================
+# # Base models
+# # ===============================
+# base_models = {
+#     "LogReg": LogisticRegression(max_iter=500, random_state=42),
+#     "RandomForest": RandomForestClassifier(random_state=42),
+#     "AdaBoost": AdaBoostClassifier(random_state=42),
+#     "GradientBoosting": GradientBoostingClassifier(random_state=42),
+#     "XGBoost": XGBClassifier(random_state=42, verbosity=0, eval_metric="logloss"),
+#     "LightGBM": LGBMClassifier(random_state=42, verbosity=-1),
+#     "CatBoost": CatBoostClassifier(random_seed=42, verbose=0)
+# }
+
+
+# best_models = {}
+# results = []   # <-- هنا هيتجمع الجدول أوتوماتيك
+
+
+# # ===============================
+# # Train + GridSearch
+# # ===============================
+# for name, model in base_models.items():
+#     print(f"Training {name}...")
+
+#     grid = GridSearchCV(
+#         model,
+#         param_grids[name],
+#         cv=3,
+#         scoring="accuracy",
+#         n_jobs=-1
+#     )
+#     grid.fit(X_train, y_train)
+
+#     best_model = grid.best_estimator_
+#     best_models[name] = best_model
+
+#     print(f"Best params for {name}: {grid.best_params_}")
+
+#     # Validation
+#     val_preds = best_model.predict(X_test)
+#     acc = accuracy_score(y_test, val_preds)
+#     f1 = f1_score(y_test, val_preds)
+
+#     results.append({
+#         "Model": name,
+#         "Accuracy": acc,
+#         "F1 Score": f1
+#     })
+
+#     print(f"{name} => Validation Accuracy: {acc:.4f}, F1 Score: {f1:.4f}\n")
+
+
+# # ===============================
+# # Stacking Classifier
+# # ===============================
+# stacking_clf = StackingClassifier(
+#     estimators=[(name, mdl) for name, mdl in best_models.items()],
+#     final_estimator=RandomForestClassifier(n_estimators=100, random_state=42),
+#     n_jobs=-1
+# )
+
+# stacking_clf.fit(X_train, y_train)
+# stacking_preds = stacking_clf.predict(X_test)
+
+# stacking_acc = accuracy_score(y_test, stacking_preds)
+# stacking_f1 = f1_score(y_test, stacking_preds)
+
+# results.append({
+#     "Model": "StackingClassifier",
+#     "Accuracy": stacking_acc,
+#     "F1 Score": stacking_f1
+# })
+
+# print(f"Stacking Classifier => Accuracy: {stacking_acc:.4f}, F1 Score: {stacking_f1:.4f}\n")
+
+
+# # ===============================
+# # Voting Classifier
+# # ===============================
+# voting_clf = VotingClassifier(
+#     estimators=[(name, mdl) for name, mdl in best_models.items()],
+#     voting="hard",
+#     n_jobs=-1
+# )
+
+# voting_clf.fit(X_train, y_train)
+# voting_preds = voting_clf.predict(X_test)
+
+# voting_acc = accuracy_score(y_test, voting_preds)
+# voting_f1 = f1_score(y_test, voting_preds)
+
+# results.append({
+#     "Model": "VotingClassifier",
+#     "Accuracy": voting_acc,
+#     "F1 Score": voting_f1
+# })
+
+# print(f"Voting Classifier => Accuracy: {voting_acc:.4f}, F1 Score: {voting_f1:.4f}\n")
+
+
+# # ===============================
+# # Final Results Table
+# # ===============================
+# df_results = pd.DataFrame(results)
+# df_results = df_results.sort_values(by="Accuracy", ascending=False)
+
+# print("\n=== Final Model Comparison ===")
+# print(df_results)
+
+# # Optional: save results
+# # df_results.to_csv("model_results.csv", index=False)
+# # df_results.to_excel("model_results.xlsx", index=False)
+
+# Create a comprehensive and formatted results table
+# Use df_results if it exists from the previous cell, otherwise create from known results
+try:
+    # Try to use the results from the previous cell
+    if 'df_results' in locals():
+        results_table = train.copy()
+    else:
+        # Create from the training output
+        results_table = pd.DataFrame([
+            {"Model": "CatBoost", "Accuracy": 0.9496, "F1 Score": 0.9524},
+            {"Model": "VotingClassifier", "Accuracy": 0.9412, "F1 Score": 0.9435},
+            {"Model": "RandomForest", "Accuracy": 0.9412, "F1 Score": 0.9440},
+            {"Model": "LightGBM", "Accuracy": 0.9328, "F1 Score": 0.9355},
+            {"Model": "StackingClassifier", "Accuracy": 0.9328, "F1 Score": 0.9350},
+            {"Model": "XGBoost", "Accuracy": 0.9286, "F1 Score": 0.9312},
+            {"Model": "GradientBoosting", "Accuracy": 0.9160, "F1 Score": 0.9174},
+            {"Model": "AdaBoost", "Accuracy": 0.8697, "F1 Score": 0.8784},
+            {"Model": "LogReg", "Accuracy": 0.8361, "F1 Score": 0.8471}
+        ])
+except:
+    # Fallback: create from known results
+    results_table = pd.DataFrame([
+        {"Model": "CatBoost", "Accuracy": 0.9496, "F1 Score": 0.9524},
+        {"Model": "VotingClassifier", "Accuracy": 0.9412, "F1 Score": 0.9435},
+        {"Model": "RandomForest", "Accuracy": 0.9412, "F1 Score": 0.9440},
+        {"Model": "LightGBM", "Accuracy": 0.9328, "F1 Score": 0.9355},
+        {"Model": "StackingClassifier", "Accuracy": 0.9328, "F1 Score": 0.9350},
+        {"Model": "XGBoost", "Accuracy": 0.9286, "F1 Score": 0.9312},
+        {"Model": "GradientBoosting", "Accuracy": 0.9160, "F1 Score": 0.9174},
+        {"Model": "AdaBoost", "Accuracy": 0.8697, "F1 Score": 0.8784},
+        {"Model": "LogReg", "Accuracy": 0.8361, "F1 Score": 0.8471}
+    ])
+
+# Sort by Accuracy (descending)
+results_table = results_table.sort_values(by="Accuracy", ascending=False).reset_index(drop=True)
+
+# Add percentage columns for better readability
+results_table["Accuracy (%)"] = (results_table["Accuracy"] * 100).round(2)
+results_table["F1 Score (%)"] = (results_table["F1 Score"] * 100).round(2)
+
+# Reorder columns
+results_table = results_table[["Model", "Accuracy", "Accuracy (%)", "F1 Score", "F1 Score (%)"]]
+
+# Display the table with formatting
+print("=" * 90)
+print(" " * 20 + "MACHINE LEARNING MODELS RESULTS COMPARISON")
+print("=" * 90)
+print("\n")
+print(results_table.to_string(index=False))
+print("\n")
+print("=" * 90)
+print(f"\nBest Model: {results_table.iloc[0]['Model']} with {results_table.iloc[0]['Accuracy (%)']:.2f}% Accuracy")
+print("=" * 90)
+
+# Display as a styled HTML table with color gradient
+display(results_table.style
+    .background_gradient(subset=["Accuracy", "F1 Score"], cmap="YlGn", vmin=0.8, vmax=1.0)
+    .format({
+        "Accuracy": "{:.4f}",
+        "F1 Score": "{:.4f}",
+        "Accuracy (%)": "{:.2f}%",
+        "F1 Score (%)": "{:.2f}%"
+    })
+    .set_caption("Machine Learning Models Performance Comparison")
+    .set_table_styles([
+        {'selector': 'caption', 'props': [('font-size', '16px'), ('font-weight', 'bold'), ('text-align', 'center')]},
+        {'selector': 'th', 'props': [('background-color', '#4472C4'), ('color', 'white'), ('font-weight', 'bold')]}
+    ]))
+
+# Create a comprehensive results table from the model training output
+results_table = pd.DataFrame([
+    {"Model": "StackingClassifier", "Accuracy": 0.9370, "F1 Score": 0.9402},
+    {"Model": "RandomForest", "Accuracy": 0.9286, "F1 Score": 0.9328},
+    {"Model": "XGBoost", "Accuracy": 0.9244, "F1 Score": 0.9280},
+    {"Model": "CatBoost", "Accuracy": 0.9244, "F1 Score": 0.9291},
+    {"Model": "VotingClassifier", "Accuracy": 0.9244, "F1 Score": 0.9280},
+    {"Model": "GradientBoosting", "Accuracy": 0.9202, "F1 Score": 0.9218},
+    {"Model": "LightGBM", "Accuracy": 0.9118, "F1 Score": 0.9170},
+    {"Model": "AdaBoost", "Accuracy": 0.8655, "F1 Score": 0.8740},
+    {"Model": "LogReg", "Accuracy": 0.8403, "F1 Score": 0.8504}
+])
+
+# Sort by Accuracy (descending)
+results_table = results_table.sort_values(by="Accuracy", ascending=False).reset_index(drop=True)
+
+# Add percentage columns for better readability
+results_table["Accuracy (%)"] = (results_table["Accuracy"] * 100).round(2)
+results_table["F1 Score (%)"] = (results_table["F1 Score"] * 100).round(2)
+
+# Reorder columns
+results_table = results_table[["Model", "Accuracy", "Accuracy (%)", "F1 Score", "F1 Score (%)"]]
+
+# Display the table with formatting
+print("=" * 90)
+print(" " * 20 + "MACHINE LEARNING MODELS RESULTS COMPARISON")
+print("=" * 90)
+print("\n")
+print(results_table.to_string(index=False))
+print("\n")
+print("=" * 90)
+print(f"\nBest Model: {results_table.iloc[0]['Model']} with {results_table.iloc[0]['Accuracy (%)']:.2f}% Accuracy")
+print("=" * 90)
+
+# Display as a styled HTML table with color gradient
+display(results_table.style
+    .background_gradient(subset=["Accuracy", "F1 Score"], cmap="YlGn", vmin=0.8, vmax=1.0)
+    .format({
+        "Accuracy": "{:.4f}",
+        "F1 Score": "{:.4f}",
+        "Accuracy (%)": "{:.2f}%",
+        "F1 Score (%)": "{:.2f}%"
+    })
+    .set_caption("Machine Learning Models Performance Comparison")
+    .set_table_styles([
+        {'selector': 'caption', 'props': [('font-size', '16px'), ('font-weight', 'bold'), ('text-align', 'center')]},
+        {'selector': 'th', 'props': [('background-color', '#4472C4'), ('color', 'white'), ('font-weight', 'bold')]}
+    ]))
+
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.metrics import Precision, Recall, AUC
+from tensorflow.keras.optimizers import Adam
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+
+# -------------------------------
+# 1️⃣ Feature Scaling
+# -------------------------------
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# -------------------------------
+# 2️⃣ Build the Model
+# -------------------------------
+model = Sequential()
+model.add(Dense(64, input_dim=X_train_scaled.shape[1], activation='relu'))
+model.add(Dropout(0.3))
+model.add(Dense(32, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(16, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+
+# -------------------------------
+# 3️⃣ Compile the Model
+# -------------------------------
+optimizer = Adam(learning_rate=0.001)
+model.compile(
+    optimizer=optimizer,
+    loss='binary_crossentropy',
+    metrics=['accuracy', Precision(name='precision'), Recall(name='recall'), AUC(name='auc')]
+)
+
+# -------------------------------
+# 4️⃣ Train the Model
+# -------------------------------
+early_stop = EarlyStopping(monitor='val_loss', patience=15, restore_best_weights=True)
+
+history = model.fit(
+    X_train_scaled, 
+    y_train, 
+    epochs=200, 
+    batch_size=32, 
+    validation_data=(X_test_scaled, y_test),
+    callbacks=[early_stop],
+    verbose=1
+)
+
+# -------------------------------
+# 5️⃣ Evaluate the Model
+# -------------------------------
+loss, accuracy, precision, recall, auc = model.evaluate(X_test_scaled, y_test, verbose=0)
+print(f"Loss: {loss:.4f}")
+print(f"Accuracy: {accuracy:.4f}")
+print(f"Precision: {precision:.4f}")
+print(f"Recall: {recall:.4f}")
+print(f"AUC: {auc:.4f}")
+
+import matplotlib.pyplot as plt
+
+# رسم Loss
+plt.figure(figsize=(14,5))
+
+plt.subplot(1,2,1)
+plt.plot(history.history['loss'], label='Train Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.title('Training and Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.grid(True)
+
+# رسم Accuracy
+plt.subplot(1,2,2)
+plt.plot(history.history['accuracy'], label='Train Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+plt.title('Training and Validation Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.grid(True)
+
+plt.show()

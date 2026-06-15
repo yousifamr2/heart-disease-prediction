@@ -234,3 +234,55 @@ nav li {
   opacity: 0.85;
   color: #21444b;
 }
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+@media (max-width: 768px) {
+  .hero {
+    padding: 40px 15px 30px;
+  }
+  .hero-title {
+    font-size: 28px;
+    letter-spacing: 1px;
+  }
+  .hero-subtitle {
+    font-size: 16px;
+  }
+  .feature-card {
+    min-height: auto;
+    padding: 30px 15px;
+  }
+  .Title_card {
+    font-size: 22px;
+  }
+  .cap_Card {
+    font-size: 14px;
+  }
+  .footer {
+    margin-top: 40px;
+    padding: 30px 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 30px 10px 20px;
+  }
+  .hero-title {
+    font-size: 24px;
+  }
+  .hero-subtitle {
+    font-size: 14px;
+  }
+  .hero-buttons-top {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero-buttons-top button {
+    width: 100%;
+  }
+  .feature-card {
+    margin-bottom: 15px;
+  }
+}

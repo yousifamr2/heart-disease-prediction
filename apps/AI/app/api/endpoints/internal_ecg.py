@@ -156,8 +156,35 @@ def ecg_pipeline(
                 status_code=422,
                 detail=f"Record has {n_sig} signal channel(s); at least 12 are required.",
             )
+            
+        # 1. Validate Lead Order
+        expected_leads = ["I", "II", "III", "aVR", "aVL", "aVF", "V1", "V2", "V3", "V4", "V5", "V6"]
+        sig_names = getattr(record, "sig_name", None)
+        if not sig_names or len(sig_names) < 12:
+            raise HTTPException(status_code=422, detail="Missing or incomplete lead names in WFDB record.")
+        actual_leads = [str(x).strip() for x in sig_names[:12]]
+        if actual_leads != expected_leads:
+            raise HTTPException(status_code=422, detail=f"Invalid lead order. Expected: {expected_leads}, Got: {actual_leads}")
+
         if n_sig > 12:
             sig = sig[:, :12]
+            
+        # 2. Signal Quality & Length Validation
+        MAX_SIGNAL_LENGTH = 10000
+        if sig.shape[0] > MAX_SIGNAL_LENGTH:
+            raise HTTPException(status_code=422, detail=f"Signal length {sig.shape[0]} exceeds maximum allowed ({MAX_SIGNAL_LENGTH}).")
+            
+        if np.isnan(sig).any() or np.isinf(sig).any():
+            raise HTTPException(status_code=422, detail="Signal contains NaN or infinite values.")
+            
+        # 3. Resampling
+        import scipy.signal
+        fs = getattr(record, "fs", None)
+        TARGET_FS = 100
+        if fs is not None and fs != TARGET_FS:
+            num_samples = int(sig.shape[0] * TARGET_FS / fs)
+            sig = scipy.signal.resample(sig, num_samples, axis=0)
+            sig = np.asarray(sig, dtype=np.float32)
 
         predictor = get_ecg_predictor()
         top_5 = predictor.predict(sig)

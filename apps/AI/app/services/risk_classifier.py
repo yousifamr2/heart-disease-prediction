@@ -27,9 +27,9 @@ from enum import Enum
 DECISION_THRESHOLD: float = 0.41   # ← the ONLY value that drives system decisions
 
 # UI display boundaries (clinically motivated, widened to avoid micro-zones)
-UI_LOW_MAX:      float = 0.30   # < 30%        → Low Risk (UI)
-UI_MODERATE_MAX: float = 0.65   # 30% – 65%   → Moderate Risk (UI)
-                                 # > 65%        → High Risk (UI)
+UI_LOW_MAX:      float = 0.40   # <= 40%       → Low Risk (UI)
+UI_MODERATE_MAX: float = 0.60   # 41% – 60%    → Moderate Risk (UI)
+                                 # > 60%        → High Risk (UI)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -132,7 +132,7 @@ def get_risk_level(probability: float) -> RiskLevel:
     if not (0.0 <= probability <= 1.0):
         raise ValueError(f"probability must be in [0, 1], got {probability}")
 
-    if probability < UI_LOW_MAX:
+    if probability <= UI_LOW_MAX:
         return RiskLevel.LOW
     elif probability <= UI_MODERATE_MAX:
         return RiskLevel.MODERATE
@@ -211,8 +211,8 @@ if __name__ == "__main__":
     print("  HYBRID RISK ASSESSMENT — DEMO")
     print("═" * 90)
     print(f"  Data-driven threshold  : {DECISION_THRESHOLD*100:.1f}%  (Youden's J, AUC=0.977)")
-    print(f"  UI boundaries          : <{UI_LOW_MAX*100:.0f}% Low  |  "
-          f"{UI_LOW_MAX*100:.0f}–{UI_MODERATE_MAX*100:.0f}% Moderate  |  "
+    print(f"  UI boundaries          : <={UI_LOW_MAX*100:.0f}% Low  |  "
+          f"{UI_LOW_MAX*100 + 1:.0f}–{UI_MODERATE_MAX*100:.0f}% Moderate  |  "
           f">{UI_MODERATE_MAX*100:.0f}% High")
     print("═" * 90)
     print(f"  {header}")

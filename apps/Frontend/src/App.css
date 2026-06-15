@@ -10,15 +10,7 @@ html, body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-
-  /* 🌈 الخلفية الموحدة */
-  background: linear-gradient(
-    to right,
-    rgba(78, 160, 177, 0.3) 0%,
-    #ffffff 10%,
-    #ffffff 90%,
-    rgba(17, 152, 183, 0.3) 100%
-  );
+  background-color: #f3f6fb;
 }
 
 /* ===== PAGE AREA ===== */

@@ -261,6 +261,7 @@ body {
 @media (max-width: 576px) {
   .login-right {
     height: 180px;
+    padding: 15px;
   }
 
   .login-content h2 {
@@ -269,5 +270,18 @@ body {
 
   .btn-gradient {
     height: 42px;
+  }
+
+  .logo {
+    width: 40px;
+  }
+
+  .login-right h1 {
+    font-size: 20px;
+  }
+
+  .logo-title-wrapper {
+    flex-direction: column;
+    text-align: center;
   }
 }

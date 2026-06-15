@@ -726,3 +726,65 @@
   color: var(--pd-text);
   margin-bottom: 8px;
 }
+
+@media (max-width: 768px) {
+  .pd-header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 12px;
+    text-align: center;
+  }
+  .pd-back {
+    grid-column: 1;
+    justify-self: center;
+  }
+  .pd-title-block {
+    grid-column: 1;
+  }
+  .pd-profile-top {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .pd-actions {
+    justify-content: center;
+    width: 100%;
+  }
+  .pd-actions button {
+    flex: 1;
+    justify-content: center;
+  }
+  .pd-page {
+    padding: 16px 12px 30px;
+  }
+  .pd-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .pd-toolbar {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pd-toolbar > div,
+  .pd-toolbar input,
+  .pd-toolbar select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .pd-stat-card {
+    padding: 15px;
+  }
+  .pd-stat-card .value {
+    font-size: 1.4rem;
+  }
+  .pd-chart {
+    height: 200px;
+  }
+  .pd-modal {
+    max-height: 90vh;
+    padding: 0;
+  }
+}

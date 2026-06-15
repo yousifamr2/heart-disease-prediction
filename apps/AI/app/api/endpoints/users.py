@@ -5,9 +5,6 @@ from db.models import LabTest, Prediction
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
-@router.post("")
-def add_user():
-    raise HTTPException(status_code=400, detail="Use Node.js API to create lab tests.")
 
 @router.get("/{id}")
 def get_user(id: str, db: Session = Depends(get_db)):

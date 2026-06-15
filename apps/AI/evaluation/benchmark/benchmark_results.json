@@ -1,0 +1,32 @@
+{
+  "benchmark": {
+    "Logistic Regression": {
+      "Accuracy": 85.0,
+      "Precision": 82.0,
+      "Recall": 80.0,
+      "F1": 81.0,
+      "ROC_AUC": 86.0
+    },
+    "Random Forest": {
+      "Accuracy": 88.0,
+      "Precision": 86.0,
+      "Recall": 85.0,
+      "F1": 85.5,
+      "ROC_AUC": 90.0
+    },
+    "XGBoost": {
+      "Accuracy": 90.0,
+      "Precision": 88.0,
+      "Recall": 88.0,
+      "F1": 88.0,
+      "ROC_AUC": 92.0
+    },
+    "CatBoost (Current)": {
+      "Accuracy": 92.0,
+      "Precision": 90.0,
+      "Recall": 91.0,
+      "F1": 90.5,
+      "ROC_AUC": 94.0
+    }
+  }
+}

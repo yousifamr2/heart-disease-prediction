@@ -28,7 +28,7 @@ body{
 /* ===== CARD ===== */
 
 .register-card{
-  width: 100vw;
+  width: 100%;
   height: 100vh;
 
   display: flex;
@@ -285,5 +285,35 @@ body{
 
   .page-title{
     font-size: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .register-image-side {
+    height: 180px;
+    padding: 15px;
+  }
+  .brand {
+    flex-direction: column;
+    text-align: center;
+  }
+  .brand h1 {
+    font-size: 20px;
+  }
+  .brand-logo {
+    width: 40px;
+  }
+  .register-form-side {
+    padding: 30px 15px;
+  }
+  .form-content h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  .input-group input {
+    height: 40px;
+  }
+  .create-btn {
+    height: 40px;
   }
 }

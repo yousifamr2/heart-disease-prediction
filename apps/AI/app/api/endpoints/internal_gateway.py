@@ -193,11 +193,25 @@ def internal_predict(body: InternalTargetRequest, db: Session = Depends(get_db))
         if consultant:
             top_features = sorted(shap_data.items(), key=lambda x: abs(x[1]), reverse=True)[:3]
             try:
+                patient_data = {
+                    "Age": patient.age,
+                    "Sex": "Male" if patient.sex == 1 else "Female",
+                    "Chest Pain Type": patient.chest_pain_type,
+                    "Resting BP (mm Hg)": patient.resting_bp_s,
+                    "Cholesterol (mg/dl)": patient.cholesterol,
+                    "Fasting Blood Sugar": patient.fasting_blood_sugar,
+                    "Resting ECG": patient.resting_ecg,
+                    "Max Heart Rate": patient.max_heart_rate,
+                    "Exercise Angina": "Yes" if patient.exercise_angina == 1 else "No",
+                    "Oldpeak": patient.oldpeak,
+                    "ST Slope": patient.st_slope,
+                }
                 llm_result = consultant.generate_report(
                     probability=assessment.probability_pct,
                     decision=assessment.decision.value,
                     ui_risk_level=assessment.risk_level.value,
                     top_features=top_features,
+                    patient_data=patient_data,
                 )
                 prediction_record.llm_report_json = llm_result
             except Exception as e:
@@ -399,14 +413,16 @@ def internal_report_pdf(body: InternalTargetRequest, db: Session = Depends(get_d
             db.commit()
 
     if not prediction_record.pdf_binary:
-        raise HTTPException(
-            status_code=503,
-            detail=(
-                "PDF report could not be generated. On the AI host run: "
-                "`pip install playwright` then `playwright install chromium`. "
-                "Or use Python 3.11/3.12 with `pip install xhtml2pdf`, or install Visual Studio Build Tools (C++) on Python 3.13."
-            ),
-        )
+        return {
+            "success": False,
+            "message": "PDF report generation failed (Playwright missing).",
+            "fallback_data": {
+                "prediction_probability": prediction_record.prediction_percentage,
+                "risk_level": prediction_record.risk_level,
+                "decision": prediction_record.decision,
+            }
+        }
+        
     return Response(
         content=prediction_record.pdf_binary,
         media_type="application/pdf",

@@ -1,65 +1,86 @@
-.page {
-  min-height: 100vh;
-  background: #ffffff;
-}
-.main {
-  min-height: 100vh;
-} /* logo */
+/* logo */
 .brand-name {
-  color: var(--text-title);
+  color: #104753;
 }
 .nav-item {
   cursor: pointer;
   font-size: 14px;
-  color: var(--text-title);
 }
 .brand {
-  font-family: "Arial Narrow Bold", sans-serif;
-  font-weight: bold;
-  color: rgb(33, 68, 75);
-}
-nav li {
-  color: #0f3d4c;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #104753;
 }
 .logo {
-  width: 40px;
+  width: 36px;
+  height: auto;
 }
 .profile {
   width: 25px;
-} /* تخلي اللينكات تبقى واضحة */
+}
 .nav-link {
-  color: #0f3d4c !important;
-  font-weight: 500;
-} /* لما الشاشة تصغر */
+  color: #104753 !important;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease;
+}
+.nav-link:hover {
+  color: #3ca6c1 !important;
+}
+/* لما الشاشة تصغر */
 @media (max-width: 991px) {
   .navbar-nav {
     margin-top: 15px;
   }
 }
 .custom-btn {
-  background-color: #77bac5 !important;
+  background-color: #3ca6c1 !important;
   border: none;
   color: #fff !important;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 24px !important;
+  border-radius: 50px !important;
   transition: all 0.3s ease;
   margin-right: 5px;
-  letter-spacing: 3%;
-  font-family: sans-serif;
+  letter-spacing: 0.02em;
+  font-family: 'Outfit', sans-serif;
+  box-shadow: 0 4px 10px rgba(60, 166, 193, 0.15);
 }
 .custom-btn:hover {
-  background-color: #0f86a3 !important;
-  box-shadow: 0 6px 15px rgba(17, 152, 183, 0.35);
-  transform: translateY(-1px);
-} /* للزرار الفاضي */
+  background-color: #2d8fa6 !important;
+  box-shadow: 0 6px 15px rgba(60, 166, 193, 0.35);
+  transform: translateY(-2px);
+}
 .custom-btn-outline {
   background-color: transparent;
-  border: 1.5px solid #1198b7 !important;
-  color: #1198b7;
-  font-weight: 500;
+  border: 1.5px solid #3ca6c1 !important;
+  color: #3ca6c1;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 24px !important;
+  border-radius: 50px !important;
   transition: all 0.3s ease;
+  font-family: 'Outfit', sans-serif;
 }
 .custom-btn-outline:hover {
-  background-color: #1198b7 !important;
+  background-color: #3ca6c1 !important;
   color: #fff !important;
-  box-shadow: 0 6px 15px rgba(17, 152, 183, 0.25);
-} /* hero section */
+  box-shadow: 0 6px 15px rgba(60, 166, 193, 0.25);
+}
+
+@media (max-width: 576px) {
+  .brand {
+    font-size: 16px;
+  }
+  .logo {
+    width: 30px;
+  }
+  .custom-btn, .custom-btn-outline {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}

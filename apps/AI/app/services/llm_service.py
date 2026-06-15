@@ -47,7 +47,14 @@ _UNSAFE_PATTERNS = [
     r"\bdefinitely (have|has|diagnosed)\b",
     r"\bclinically confirmed\b",
     r"\byou are dying\b",
+    r"\b(aspirin|statin|metoprolol|clopidogrel|warfarin|beta-blocker|ace inhibitor|mg|tablet|capsule|pill|dose|dosage|prescribe|prescription)\b",
 ]
+
+def _sanitize_input_string(text: str) -> str:
+    """Strip malicious prompt injection attempts from dynamic patient data."""
+    text = str(text)
+    text = re.sub(r"(ignore|instructions|prompt|system|override)", "", text, flags=re.IGNORECASE)
+    return re.sub(r"[^a-zA-Z0-9\s_\-\.\+]", "", text).strip()
 
 
 def sanitize_llm_output(text: str) -> str:
@@ -74,6 +81,7 @@ def build_prompt(
     decision: str,
     ui_risk_level: str,
     top_features: list,
+    patient_data: dict = None,
 ) -> str:
     """
     Build a dynamic, structured English LLM prompt.
@@ -101,16 +109,26 @@ def build_prompt(
     }.get(decision, "Use a neutral, objective tone.")
 
     features_str = "\n".join(
-        f"  - {name}: impact score {val:+.3f} "
+        f"  - {_sanitize_input_string(name)}: impact score {val:+.3f} "
         f"({'increases risk' if val > 0 else 'decreases risk'})"
         for name, val in top_features
     )
+    
+    vitals_str = "Not provided."
+    if patient_data:
+        vitals_str = "\n".join(
+            f"  - {_sanitize_input_string(k)}: {_sanitize_input_string(v)}" 
+            for k, v in patient_data.items()
+        )
 
     return f"""
 You are an expert AI medical assistant specializing in heart health.
 Your task is to write a concise, evidence-based medical report summary in English.
 
-Patient Analysis Data:
+Patient Clinical Data (Raw Vitals):
+{vitals_str}
+
+Patient Analysis Data (Model Output):
   - Heart disease probability: {probability:.1f}%
   - Risk classification: {ui_risk_level}
   - Top influencing features (SHAP values):
@@ -119,7 +137,27 @@ Patient Analysis Data:
 Tone & Style Instructions:
   {urgency_instruction}
 
+Examples of Ideal Medical Reports:
+[Example High Risk]
+Explanation: "The patient's clinical profile and elevated risk score suggest a high probability of cardiovascular disease, strongly influenced by elevated cholesterol and resting blood pressure. Immediate medical consultation is recommended for further evaluation."
+Recommendations:
+- Schedule an appointment with a cardiologist promptly.
+- Adopt a heart-healthy diet low in saturated fats.
+- Monitor blood pressure daily.
+- Avoid strenuous physical exertion until cleared by a physician.
+- Seek emergency care if chest pain or severe shortness of breath occurs.
+
+[Example Low Risk]
+Explanation: "The patient's current metrics indicate a low probability of cardiovascular disease, with age and normal blood pressure contributing favorably to the risk profile. Routine monitoring and maintenance of a healthy lifestyle are advised."
+Recommendations:
+- Continue routine annual physical examinations.
+- Maintain a balanced diet rich in fruits and vegetables.
+- Engage in regular, moderate aerobic exercise.
+- Avoid smoking and limit alcohol consumption.
+- Manage stress through relaxation techniques.
+
 Mandatory Writing Rules:
+<<<<<<< Updated upstream
   1. Always use probabilistic language: "may suggest", "could indicate", "is recommended".
   2. Never state definitively that the patient "has" or "is diagnosed with" heart disease, and never claim arterial blockage.
   3. Do not include statistics or numbers not provided in the input above.
@@ -132,6 +170,15 @@ Mandatory Writing Rules:
   10. Recommendation Anchors: If the decision is 'high', your recommendations must contain at least one of these anchor words: 'doctor', 'physician', or 'medical evaluation'. If the decision is 'low', your recommendations must contain at least one of these anchor words: 'lifestyle', 'preventive', 'exercise', or 'healthy diet'.
   11. Evidence-Based link: Every recommendation should be linked to at least one reported feature (e.g. 'Regular exercise may help manage resting bp s').
   12. Medical Disclaimer: Always include the exact text: 'This result is not a diagnosis. Please consult a doctor for medical advice.'
+=======
+  1. Always use probabilistic language: "may suggest", "could indicate", "is recommended"
+  2. Never state definitively that the patient "has" or "is diagnosed with" heart disease
+  3. Do not include statistics or numbers not provided in the input above
+  4. Keep the explanation concise: 2-3 sentences only
+  5. Recommendations must be practical and specific: EXACTLY 5 bullet points
+  6. Write in clear, patient-friendly English
+  7. NEVER prescribe medications, dosages, or specific drug classes.
+>>>>>>> Stashed changes
 """
 
 
@@ -175,6 +222,7 @@ class HeartDiseaseConsultant:
         decision:      str,
         ui_risk_level: str,
         top_features:  list,
+        patient_data:  dict = None,
     ) -> Dict:
         """
         Generate an English medical explanation and recommendations.
@@ -193,7 +241,7 @@ class HeartDiseaseConsultant:
             "recommendations" : list[str]
         """
         try:
-            prompt_text = build_prompt(probability, decision, ui_risk_level, top_features)
+            prompt_text = build_prompt(probability, decision, ui_risk_level, top_features, patient_data)
 
             raw = self._chain.invoke({
                 "user_prompt":          prompt_text,
@@ -291,12 +339,12 @@ class EcgConsultant:
         try:
             primary = top_5[0] if top_5 else {}
             primary_line = (
-                f"- {primary.get('label', primary.get('code', ''))}: {primary.get('probability', '')}%"
+                f"- {_sanitize_input_string(primary.get('label', primary.get('code', '')))}: {primary.get('probability', '')}%"
                 if primary
                 else "(none)"
             )
             top_5_lines = "\n".join(
-                f"- {x.get('label', x.get('code', '?'))}: {x.get('probability', '')}% (code {x.get('code', '')})"
+                f"- {_sanitize_input_string(x.get('label', x.get('code', '?')))}: {x.get('probability', '')}% (code {_sanitize_input_string(x.get('code', ''))})"
                 for x in top_5[:5]
             )
             prompt_text = build_ecg_prompt(top_5_lines, kb_context, primary_line)

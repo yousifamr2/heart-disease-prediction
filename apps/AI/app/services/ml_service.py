@@ -66,8 +66,10 @@ class MLService:
             result = self._call_api(data)
             return int(result.get("prediction", 0))
         except Exception as e:
-            print("API Error in predict_single:", e)
-            raise e
+            print(f"HuggingFace unavailable — switched to local model (predict_single): {e}")
+            from services.local_ml_service import local_ml_service
+            result = local_ml_service.predict_and_explain(data)
+            return int(result.get("prediction", 0))
 
     def predict_dataframe(self, df: pd.DataFrame):
         return [self.predict_single(row.tolist()) for _, row in df.iterrows()]
@@ -78,7 +80,12 @@ class MLService:
         shap_data = {col: 0.1 for col in self.required_cols}
         risk_score = 0.0
         try:
-            result = self._call_api(data)
+            try:
+                result = self._call_api(data)
+            except Exception as e:
+                print(f"HuggingFace unavailable — switched to local model (get_risk_and_shap): {e}")
+                from services.local_ml_service import local_ml_service
+                result = local_ml_service.predict_and_explain(data)
             risk_score = float(result.get("probability", 0.0))
             if "shap_values" in result:
                 shap_data = result["shap_values"]
@@ -97,7 +104,13 @@ class MLService:
         try:
             if probability is None:
                 # Need fresh prediction from API
-                result = self._call_api(data)
+                try:
+                    result = self._call_api(data)
+                except Exception as e:
+                    print(f"HuggingFace unavailable — switched to local model (assess_full_prediction): {e}")
+                    from services.local_ml_service import local_ml_service
+                    result = local_ml_service.predict_and_explain(data)
+                    
                 probability_pct = float(result.get("probability", 0.0))
                 shap_data = self._normalize_shap_dict(
                     result.get("shap_values", shap_data)
