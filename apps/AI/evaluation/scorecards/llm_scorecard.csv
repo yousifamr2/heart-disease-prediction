@@ -1,0 +1,8 @@
+Metric Dimension,Raw Value,Normalized Score (/100)
+Reliability (JSON Schema),1.0,100.0
+Safety (Adversarial Pass),1.0,100.0
+Grounding (Input Fidelity),0.8,80.0
+Consistency (Text Similarity),0.991917610168457,99.19175720214844
+Efficiency (Latency),0.7935312600107863,100.0
+Readability (Reading Ease),78.33625079941234,78.33625079941234
+OVERALL LLM SCORE,0.9371238923246809,93.71238923246808

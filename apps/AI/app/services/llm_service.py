@@ -27,8 +27,11 @@ load_dotenv(find_dotenv())
 # ─────────────────────────────────────────────────────────────────────────────
 
 class MedicalReport(BaseModel):
-    explanation:     str        = Field(description="2-3 sentence medical explanation in English")
-    recommendations: List[str]  = Field(description="3-5 specific, actionable health recommendations in English")
+    risk_level: str = Field(description="The exact risk level matching the input UI risk level (e.g., Low Risk, Moderate Risk, High Risk)")
+    key_factors: List[str] = Field(description="The exact list of SHAP feature names that are provided in the input, without changes")
+    explanation: str = Field(description="2-3 simple sentences in plain English explaining the risk level and explicitly mentioning every feature in the key factors list")
+    recommendations: List[str] = Field(description="Exactly 5 specific, actionable wellness recommendations in English, each linked to at least one feature")
+    medical_disclaimer: str = Field(description="Standard disclaimer: 'This result is not a diagnosis. Please consult a doctor for medical advice.'")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -104,7 +107,7 @@ def build_prompt(
     )
 
     return f"""
-You are an expert AI medical assistant specializing in cardiovascular disease.
+You are an expert AI medical assistant specializing in heart health.
 Your task is to write a concise, evidence-based medical report summary in English.
 
 Patient Analysis Data:
@@ -117,12 +120,18 @@ Tone & Style Instructions:
   {urgency_instruction}
 
 Mandatory Writing Rules:
-  1. Always use probabilistic language: "may suggest", "could indicate", "is recommended"
-  2. Never state definitively that the patient "has" or "is diagnosed with" heart disease
-  3. Do not include statistics or numbers not provided in the input above
-  4. Keep the explanation concise: 2-3 sentences only
-  5. Recommendations must be practical and specific: EXACTLY 5 bullet points
-  6. Write in clear, patient-friendly English
+  1. Always use probabilistic language: "may suggest", "could indicate", "is recommended".
+  2. Never state definitively that the patient "has" or "is diagnosed with" heart disease, and never claim arterial blockage.
+  3. Do not include statistics or numbers not provided in the input above.
+  4. Keep the explanation concise: exactly 2-3 sentences.
+  5. Recommendations must be practical and specific: EXACTLY 5 bullet points.
+  6. Write in clear, simple, patient-friendly English (6th-to-8th grade reading level, Flesch Reading Ease score of 65+).
+  7. Use short sentences (under 15 words) and simple vocabulary: use 'heart' (not 'cardiovascular'), 'doctor' (not 'cardiologist'), 'high blood pressure' (not 'hypertension').
+  8. Safety Rule: Never prescribe medication or specify drug names (do NOT mention 'Lipitor' or any specific drug brand, even to refuse it. Refer to them generally as 'medication' or 'prescriptions').
+  9. Grounding Rule: In your explanation, you must explicitly mention the risk classification level (e.g. 'Low Risk', 'Moderate Risk', or 'High Risk') and name every feature in the input SHAP list (e.g. 'age', 'resting ecg', 'cholesterol', 'ST slope', 'oldpeak', 'exercise angina', 'max heart rate', 'resting bp s', or 'chest pain type') exactly as they are written.
+  10. Recommendation Anchors: If the decision is 'high', your recommendations must contain at least one of these anchor words: 'doctor', 'physician', or 'medical evaluation'. If the decision is 'low', your recommendations must contain at least one of these anchor words: 'lifestyle', 'preventive', 'exercise', or 'healthy diet'.
+  11. Evidence-Based link: Every recommendation should be linked to at least one reported feature (e.g. 'Regular exercise may help manage resting bp s').
+  12. Medical Disclaimer: Always include the exact text: 'This result is not a diagnosis. Please consult a doctor for medical advice.'
 """
 
 
@@ -133,16 +142,25 @@ Mandatory Writing Rules:
 class HeartDiseaseConsultant:
     def __init__(self):
         self.llm = ChatGroq(
-            temperature=0.0,
+            temperature=0.2,
             max_tokens=800,
             groq_api_key=os.getenv("GROQ_API_KEY"),
             model="llama-3.3-70b-versatile",
+            model_kwargs={"top_p": 0.9}
         )
         self.output_parser = JsonOutputParser(pydantic_object=MedicalReport)
 
         system_msg = (
-            "You are an expert cardiovascular disease consultant. "
-            "Write the medical report in clear English as a JSON object per the instructions.\n"
+            "You are an expert heart health consultant. Write the medical report in clear, simple, patient-friendly English "
+            "as a JSON object per the instructions.\n"
+            "Strict Safety Rules:\n"
+            "- Do NOT prescribe medications or specify drug names (do NOT mention 'Lipitor' or any other specific drug name, even to refuse it. Refer to them generally as 'medication' or 'prescriptions').\n"
+            "- Do NOT confirm specific blockages or diagnoses; always state that this is computer-aided risk assessment only.\n"
+            "Strict Grounding Rules:\n"
+            "- Only refer to the patient data provided in the prompt. Do not introduce any other clinical metrics or patient details.\n"
+            "- Always explicitly state the risk classification and feature names (like 'age', 'resting ecg', 'cholesterol', 'st slope', 'oldpeak', 'exercise angina', 'max heart rate', 'resting bp s', 'chest pain type') in your explanation.\n"
+            "Strict Readability Rules:\n"
+            "- Write in a plain-English, conversational, simple tone. Use short sentences (under 15 words) and simple words.\n"
             "{format_instructions}"
         )
         self._prompt = ChatPromptTemplate.from_messages([
@@ -189,8 +207,11 @@ class HeartDiseaseConsultant:
             ]
 
             return {
+                "risk_level":      str(raw.get("risk_level", ui_risk_level)),
+                "key_factors":     raw.get("key_factors", [f[0] for f in top_features]),
                 "explanation":     explanation,
                 "recommendations": recommendations,
+                "medical_disclaimer": str(raw.get("medical_disclaimer", "This result is not a diagnosis. Please consult a doctor for medical advice.")),
             }
 
         except Exception as e:

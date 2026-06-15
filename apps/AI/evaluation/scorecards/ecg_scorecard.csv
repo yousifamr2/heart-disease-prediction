@@ -1,0 +1,8 @@
+Metric Dimension,Raw Value,Normalized Score (/100)
+Discrimination (AUC),0.5,50.0
+Balance (F1),0.0,0.0
+Safety (Sensitivity),0.0,0.0
+Reliability (Specificity),1.0,100.0
+Calibration (Brier),0.04656140350877193,95.3438596491228
+Efficiency (Latency),0.08833180111832917,100.0
+OVERALL ECG SCORE,0.47034385964912284,47.03438596491228

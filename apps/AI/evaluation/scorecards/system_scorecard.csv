@@ -1,0 +1,4 @@
+System Component,Weight,Score (/100)
+ECG Classifier (xresnet1d101),0.6,47.03438596491228
+LLM Medical Report Generator (Llama-3.3),0.4,93.71238923246808
+OVERALL SYSTEM READINESS,1.0,65.7055872719346

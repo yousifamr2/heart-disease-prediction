@@ -1,0 +1,5 @@
+{
+    "optimal_threshold": 0.05,
+    "max_f1": 0.0,
+    "production_threshold": 0.41
+}

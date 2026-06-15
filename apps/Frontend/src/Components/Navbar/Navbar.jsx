@@ -30,7 +30,7 @@ export default function Navbar() {
       {/* Logo */}
       <div className="d-flex align-items-center gap-2">
         <img src={logo} className="logo" alt="logo" />
-        <span className="brand">Heart Diseases</span>
+        <span className="brand">Nabdak</span>
       </div>
 
       {/* Toggle */}

@@ -10,6 +10,7 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
+// Trigger nodemon reload
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");

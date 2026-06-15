@@ -1,0 +1,7 @@
+{
+    "RPM_Limit": 30,
+    "RPM_Mode": "FAST",
+    "Estimated_Total_Input_Tokens": 2250,
+    "Estimated_Total_Output_Tokens": 750,
+    "Estimated_Cost_USD": 0.0019199999999999998
+}
