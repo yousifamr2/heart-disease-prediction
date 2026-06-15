@@ -1,4 +1,12 @@
 import os
+<<<<<<< HEAD
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+# Must run before any project import that reads os.environ (e.g. db.database -> core.config).
+_env_path = Path(__file__).resolve().parent.parent / ".env"
+=======
 import sys
 from pathlib import Path
 
@@ -14,13 +22,18 @@ from dotenv import load_dotenv
 
 # Must run before any project import that reads os.environ (e.g. db.database -> core.config).
 _env_path = _current_dir.parent / ".env"
+>>>>>>> main
 load_dotenv(_env_path, encoding="utf-8-sig")
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
+<<<<<<< HEAD
+from api.router import api_router
+=======
 from app.api.router import api_router
+>>>>>>> main
 
 if not (os.getenv("INTERNAL_API_KEY") or "").strip():
     print(

@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+/Project/node_modules
+=======
 # Node
 node_modules/
 
@@ -34,3 +37,4 @@ body_*.txt
 # OS files
 .DS_Store
 Thumbs.db
+>>>>>>> main

@@ -91,8 +91,11 @@ const Login = () => {
         alert("Login Successfully");
         const token = res.data.token || res.data.data?.token;
         if (token) localStorage.setItem("token", token);
+<<<<<<< HEAD
+=======
         const refreshToken = res.data.refreshToken || res.data.data?.refreshToken;
         if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+>>>>>>> main
         localStorage.setItem("user", JSON.stringify(res.data.data || res.data.user));
         setErrors({});
         navigate("/the_general");
