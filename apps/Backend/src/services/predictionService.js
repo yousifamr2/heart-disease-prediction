@@ -2,6 +2,7 @@ const prisma = require("../config/prisma");
 const {
   internalPredict,
   internalShapPng,
+  internalShapData,
   internalReportPdf,
 } = require("../integrations/ai.service");
 
@@ -109,7 +110,62 @@ class PredictionService {
       err.statusCode = 400;
       throw err;
     }
-    return internalShapPng(prediction.lab_test_id);
+
+    // ── Try database first ────────────────────────────────────────────
+    if (prediction.shap_image) {
+      return Buffer.from(prediction.shap_image);
+    }
+
+    // ── Fallback: AI service ──────────────────────────────────────────
+    try {
+      return await internalShapPng(prediction.lab_test_id);
+    } catch (aiErr) {
+      const err = new Error("SHAP image is not available yet. Please run Start Prediction again.");
+      err.statusCode = 503;
+      throw err;
+    }
+  }
+
+  static async shapDataForPrediction(predictionId, user) {
+    const prediction = await this.assertPredictionOwnedByUser(predictionId, user);
+    if (prediction.decision === "low") {
+      const err = new Error("SHAP data is not available for low risk predictions.");
+      err.statusCode = 400;
+      throw err;
+    }
+
+    try {
+      return await internalShapData(prediction.lab_test_id);
+    } catch (aiErr) {
+      if (prediction.shap_values_json) {
+        const shap_data = prediction.shap_values_json;
+        const sorted_features = Object.entries(shap_data)
+          .map(([feature, val]) => ({
+            feature,
+            impact: Math.abs(Number(val) || 0)
+          }))
+          .sort((a, b) => b.impact - a.impact);
+
+        const labels = sorted_features.map(f => f.feature);
+        const values = sorted_features.map(f => f.impact);
+
+        return {
+          prediction_probability: prediction.prediction_percentage,
+          risk_level: prediction.risk_level,
+          top_features: sorted_features.map(f => ({
+            feature: f.feature,
+            value: "N/A",
+            impact: f.impact,
+            direction: "increase"
+          })),
+          chart_data: { labels, values },
+          explanation: "Feature importance calculated from cached prediction values."
+        };
+      }
+      const err = new Error("SHAP data is not available yet. Please run Start Prediction again.");
+      err.statusCode = 503;
+      throw err;
+    }
   }
 
   static async reportPdfForPrediction(predictionId, user) {
@@ -119,7 +175,22 @@ class PredictionService {
       err.statusCode = 400;
       throw err;
     }
-    return internalReportPdf(prediction.lab_test_id);
+
+    // ── Try database first (pdf_binary stored during prediction) ──────
+    if (prediction.pdf_binary) {
+      return Buffer.from(prediction.pdf_binary);
+    }
+
+    // ── Fallback: ask AI service to generate it (only works when AI is reachable) ──
+    try {
+      return await internalReportPdf(prediction.lab_test_id);
+    } catch (aiErr) {
+      const err = new Error(
+        "PDF report is not available yet. Please run Start Prediction again to regenerate it."
+      );
+      err.statusCode = 503;
+      throw err;
+    }
   }
 }
 

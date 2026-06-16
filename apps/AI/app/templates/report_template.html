@@ -440,7 +440,7 @@
             <div class="visuals-container">
                 <div class="visual-card">
                     <h3
-                        class="{% if risk_score|float > 60 %}risk-high{% elif risk_score|float < 40 %}risk-low{% else %}risk-moderate{% endif %}">
+                        class="{% if risk_score|float >= 50 %}risk-high{% else %}risk-low{% endif %}">
                         Calculated Cardiac Risk Score: {{ risk_score }}%
                     </h3>
                     <img src="{{ images.risk_gauge }}" alt="Risk Level Gauge" style="max-height: 280px;">
@@ -493,12 +493,10 @@
                     const scoreMatch = el.textContent.match(/(\d+(\.\d+)?)/);
                     if (scoreMatch) {
                         const score = parseFloat(scoreMatch[0]);
-                        if (score > 60) {
+                        if (score >= 50) {
                             el.className = 'risk-high';
-                        } else if (score < 40) {
-                            el.className = 'risk-low';
                         } else {
-                            el.className = 'risk-moderate';
+                            el.className = 'risk-low';
                         }
                     }
                 }

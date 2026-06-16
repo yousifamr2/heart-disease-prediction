@@ -20,8 +20,9 @@ import {
 
 import "./PatientDashboard.css";
 import defaultProfile from "../../Image/prof.png";
+import API_BASE_URL from "../../config";
 
-const API = "http://localhost:5000/api";
+const API = `${API_BASE_URL}/api`;
 const PAGE_SIZE = 5;
 const CONTACT_KEY = "patientProfile_contact";
 
@@ -33,8 +34,7 @@ function pctFromRow(row) {
 
 function riskTierFromPct(p) {
   if (p == null) return "none";
-  if (p >= 70) return "high";
-  if (p >= 40) return "medium";
+  if (p >= 50) return "high";
   return "low";
 }
 
@@ -50,14 +50,12 @@ function tierFromRow(row) {
 
 function riskLabel(tier) {
   if (tier === "high") return "High Risk";
-  if (tier === "medium") return "Medium Risk";
   if (tier === "low") return "Low Risk";
   return "No prediction";
 }
 
 function barColor(tier) {
   if (tier === "high") return "var(--pd-risk-high)";
-  if (tier === "medium") return "var(--pd-risk-mid)";
   if (tier === "low") return "var(--pd-risk-low)";
   return "#cbd5e1";
 }
@@ -129,8 +127,7 @@ function PredictionTrendChart({ points, onPointClick }) {
   const yAt = (pct) => PAD.t + innerH - (Math.max(0, Math.min(100, pct)) / 100) * innerH;
 
   const dotColor = (pct) => {
-    if (pct >= 70) return "#ef4444";
-    if (pct >= 40) return "#f59e0b";
+    if (pct >= 50) return "#ef4444";
     return "#22c55e";
   };
 
@@ -153,8 +150,7 @@ function PredictionTrendChart({ points, onPointClick }) {
   }, [points]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const y0 = yAt(0);
-  const y40 = yAt(40);
-  const y70 = yAt(70);
+  const y50 = yAt(50);
   const y100 = yAt(100);
 
   const handleMouseMove = (e) => {
@@ -230,21 +226,14 @@ function PredictionTrendChart({ points, onPointClick }) {
           x={PAD.l}
           y={y100}
           width={innerW}
-          height={y70 - y100}
+          height={y50 - y100}
           fill="rgba(239,68,68,0.10)"
         />
         <rect
           x={PAD.l}
-          y={y70}
+          y={y50}
           width={innerW}
-          height={y40 - y70}
-          fill="rgba(245,158,11,0.12)"
-        />
-        <rect
-          x={PAD.l}
-          y={y40}
-          width={innerW}
-          height={y0 - y40}
+          height={y0 - y50}
           fill="rgba(34,197,94,0.12)"
         />
 
@@ -265,14 +254,11 @@ function PredictionTrendChart({ points, onPointClick }) {
           </g>
         ))}
 
-        <text x={PAD.l + innerW - 4} y={y70 - 6} fontSize="10" fill="#ef4444" textAnchor="end">
+        <text x={PAD.l + innerW - 4} y={y50 - 6} fontSize="10" fill="#ef4444" textAnchor="end">
           High risk
         </text>
-        <text x={PAD.l + innerW - 4} y={y40 - 6} fontSize="10" fill="#f59e0b" textAnchor="end">
-          Medium
-        </text>
         <text x={PAD.l + innerW - 4} y={y0 - 6} fontSize="10" fill="#22c55e" textAnchor="end">
-          Low
+          Low risk
         </text>
 
         <path
@@ -444,6 +430,20 @@ export default function PatientDashboard() {
   const removeToast = (id) => setToasts((prev) => prev.filter((t) => t.id !== id));
 
   useEffect(() => {
+    let meta = document.querySelector('meta[name="viewport"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.name = 'viewport';
+      document.head.appendChild(meta);
+    }
+    const originalContent = meta.getAttribute('content') || 'width=device-width, initial-scale=1';
+    meta.setAttribute('content', 'width=1280');
+    return () => {
+      meta.setAttribute('content', originalContent);
+    };
+  }, []);
+
+  useEffect(() => {
     const saved = localStorage.getItem("user");
     if (!saved) {
       navigate("/login");
@@ -546,7 +546,7 @@ export default function PatientDashboard() {
       withPct.length > 0
         ? Math.round((withPct.reduce((s, x) => s + x.pct, 0) / withPct.length) * 10) / 10
         : null;
-    const highCount = withPct.filter((x) => x.pct >= 70).length;
+    const highCount = withPct.filter((x) => x.pct >= 50).length;
     const maxPct = withPct.length > 0 ? Math.max(...withPct.map((x) => x.pct)) : null;
     const latestPct = withPct.length ? withPct[0].pct : null;
 
@@ -797,7 +797,7 @@ export default function PatientDashboard() {
       pushToast("No prediction report for this row.", "error");
       return;
     }
-    if (pct != null && pct < 70) {
+    if (pct != null && pct < 50) {
       pushToast("PDF report is only available for high-risk predictions.", "error");
       return;
     }
@@ -877,7 +877,7 @@ export default function PatientDashboard() {
         <StatCard
           label="High-risk cases"
           value={stats.highCount}
-          sub="Tests at or above 70%"
+          sub="Tests at or above 50%"
           icon={<FaHospital color="#1198b7" />}
         />
         <StatCard

@@ -3,6 +3,8 @@ html, body {
   padding: 0;
   height: 100%;
   font-family: sans-serif;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* ===== APP LAYOUT ===== */
@@ -10,7 +12,18 @@ html, body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f3f6fb;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+
+  /* 🌈 الخلفية الموحدة */
+  background: linear-gradient(
+    to right,
+    rgba(78, 160, 177, 0.3) 0%,
+    #ffffff 10%,
+    #ffffff 90%,
+    rgba(17, 152, 183, 0.3) 100%
+  );
 }
 
 /* ===== PAGE AREA ===== */
@@ -18,6 +31,9 @@ html, body {
   flex: 1;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* ===== REMOVE DEFAULT REACT STYLES ===== */

@@ -4,8 +4,9 @@
   "description": "Heart Disease Prediction API",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "npx prisma generate && node src/server.js",
     "dev": "nodemon src/server.js",
+    "build": "npx prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed:labs": "node seedLabs.js"
   },

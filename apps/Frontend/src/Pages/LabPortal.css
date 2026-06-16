@@ -205,17 +205,17 @@
   }
   .lab-portal-header {
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
     text-align: center;
+    margin-bottom: 30px;
   }
   .lab-portal-card {
     padding: 20px;
-    margin: 10px;
   }
   .portal-title {
-    font-size: 24px;
+    font-size: 22px;
   }
   .upload-area {
-    padding: 20px 10px;
+    padding: 25px 15px;
   }
 }

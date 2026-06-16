@@ -58,9 +58,19 @@ async function readWfdbPair(relativeDat, relativeHea) {
     err.statusCode = 404;
     throw err;
   }
-  const [datBuffer, heaBuffer] = await Promise.all([fs.readFile(datAbs), fs.readFile(heaAbs)]);
-  return { datBuffer, heaBuffer };
+  try {
+    const [datBuffer, heaBuffer] = await Promise.all([fs.readFile(datAbs), fs.readFile(heaAbs)]);
+    return { datBuffer, heaBuffer };
+  } catch (e) {
+    if (e.code === "ENOENT") {
+      const err = new Error("ECG recording files are missing on local disk. Please upload the ECG again.");
+      err.statusCode = 400;
+      throw err;
+    }
+    throw e;
+  }
 }
+
 
 module.exports = {
   uploadRoot,

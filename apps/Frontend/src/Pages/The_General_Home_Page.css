@@ -40,6 +40,7 @@ body {
   font-family: "Arial Narrow Bold", sans-serif;
   font-weight: bold;
   color: rgb(33, 68, 75);
+  font-size: 28px;
 }
 nav li {
   color: #0f3d4c;
@@ -235,54 +236,34 @@ nav li {
   color: #21444b;
 }
 
-/* ========================= */
-/* RESPONSIVE */
-/* ========================= */
 @media (max-width: 768px) {
+  body {
+    background: #f4f9fc !important; /* simple background to avoid side gradients squeezing the content on mobile */
+  }
   .hero {
-    padding: 40px 15px 30px;
+    padding: 40px 16px 30px;
   }
   .hero-title {
-    font-size: 28px;
+    font-size: 1.85rem !important;
     letter-spacing: 1px;
+    line-height: 1.3;
   }
   .hero-subtitle {
-    font-size: 16px;
+    font-size: 1.1rem !important;
   }
   .feature-card {
     min-height: auto;
-    padding: 30px 15px;
+    padding: 30px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   }
   .Title_card {
-    font-size: 22px;
+    font-size: 20px;
   }
   .cap_Card {
     font-size: 14px;
   }
   .footer {
-    margin-top: 40px;
-    padding: 30px 0 15px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero {
-    padding: 30px 10px 20px;
-  }
-  .hero-title {
-    font-size: 24px;
-  }
-  .hero-subtitle {
-    font-size: 14px;
-  }
-  .hero-buttons-top {
-    flex-direction: column;
-    width: 100%;
-  }
-  .hero-buttons-top button {
-    width: 100%;
-  }
-  .feature-card {
-    margin-bottom: 15px;
+    margin: 10px;
+    padding: 30px 16px 20px;
   }
 }

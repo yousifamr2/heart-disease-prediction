@@ -11,9 +11,19 @@ if (!DATABASE_URL) {
   throw new Error("DATABASE_URL is not set in .env");
 }
 
-const pool = new Pool({ connectionString: DATABASE_URL, ssl: { rejectUnauthorized: false } });
-const adapter = new PrismaPg(pool);
+let prisma;
 
-const prisma = new PrismaClient({ adapter });
+if (process.env.NODE_ENV === "production") {
+  const pool = new Pool({ connectionString: DATABASE_URL, ssl: { rejectUnauthorized: false } });
+  const adapter = new PrismaPg(pool);
+  prisma = new PrismaClient({ adapter });
+} else {
+  if (!global.cachedPrisma) {
+    const pool = new Pool({ connectionString: DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    const adapter = new PrismaPg(pool);
+    global.cachedPrisma = new PrismaClient({ adapter });
+  }
+  prisma = global.cachedPrisma;
+}
 
 module.exports = prisma;

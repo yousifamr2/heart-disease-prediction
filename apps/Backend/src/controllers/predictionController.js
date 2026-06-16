@@ -23,6 +23,18 @@ const getShap = async (req, res, next) => {
   }
 };
 
+const getShapData = async (req, res, next) => {
+  try {
+    const data = await PredictionService.shapDataForPrediction(req.params.id, req.user);
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 const getReport = async (req, res, next) => {
   try {
     const pdf = await PredictionService.reportPdfForPrediction(req.params.id, req.user);
@@ -37,4 +49,4 @@ const getReport = async (req, res, next) => {
   }
 };
 
-module.exports = { startPrediction, getShap, getReport };
+module.exports = { startPrediction, getShap, getReport, getShapData };

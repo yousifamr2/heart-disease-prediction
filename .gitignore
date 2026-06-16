@@ -1,36 +1,67 @@
-# Node
+# Dependency directories
 node_modules/
+**/node_modules/
+jspm_packages/
+web_modules/
 
-# Environment files
+# Environment configurations (secrets)
 .env
 .env.*
+!.env.example
+!.env.*.example
 apps/AI/.env
 apps/Backend/.env
 
-# Python
+# Python compilation and caching
 __pycache__/
+**/__pycache__/
 *.pyc
 *.pyo
 *.pyd
+.pytest_cache/
+**/.pytest_cache/
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
 
 # Virtual environments
 .venv/
 venv/
 ENV/
+env/
 
-# Editors / IDE
+# Production builds
+build/
+dist/
+out/
+.next/
+
+# IDEs and Editors
 .vscode/
 .idea/
 .cursor/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
 
-# Logs and temp files
+# Logs and debug files
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 debug.log
 body_*.txt
 
-# Images / uploads
-/images
+# Project specific upload directories (contains sensitive patient CSVs/ECGs)
+apps/Backend/uploads/
+/images/
 
-# OS files
+# OS metadata
 .DS_Store
+.DS_Store?
 Thumbs.db
+ehthumbs.db
+desktop.ini
+

@@ -48,7 +48,7 @@ function Home() {
 
     // ================= REDIRECT IF RISK EXISTS =================
     if (
-      parsedPrediction?.probability >= 70
+      parsedPrediction?.probability >= 50
     ) {
 
       navigate("/have_risk");

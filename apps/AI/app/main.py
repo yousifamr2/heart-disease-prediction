@@ -1,7 +1,13 @@
 import os
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
+
+# Ensure the 'app' directory is in sys.path to resolve 'api', 'services', 'db', etc.
+_app_dir = str(Path(__file__).resolve().parent)
+if _app_dir not in sys.path:
+    sys.path.insert(0, _app_dir)
 
 # Must run before any project import that reads os.environ (e.g. db.database -> core.config).
 _env_path = Path(__file__).resolve().parent.parent / ".env"
@@ -30,8 +36,8 @@ if not (os.getenv("INTERNAL_API_KEY") or "").strip():
 
 app = FastAPI(title="Heart Disease Prediction API (Internal)")
 
-# Trusted hosts: default localhost; override with AI_ALLOWED_HOSTS=host1,host2
-_allowed = os.getenv("AI_ALLOWED_HOSTS", "127.0.0.1,localhost,testserver").split(",")
+# Trusted hosts: default * (all hosts); override with AI_ALLOWED_HOSTS=host1,host2
+_allowed = os.getenv("AI_ALLOWED_HOSTS", "*").split(",")
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=[h.strip() for h in _allowed if h.strip()])
 
 

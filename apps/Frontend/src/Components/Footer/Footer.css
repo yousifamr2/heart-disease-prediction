@@ -10,8 +10,11 @@
   border-bottom-left-radius: 30px;
   box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1); /* optional: يخلي الفوتر يبرز */
   margin-top: 60px;
-  margin: 10px;
+  margin: 10px auto;
   padding: 40px 0 20px;
+  width: calc(100% - 20px) !important;
+  max-width: calc(100% - 20px) !important;
+  box-sizing: border-box;
 } /* Buttons */
 .btn-primary {
   background-color: var(--primary);

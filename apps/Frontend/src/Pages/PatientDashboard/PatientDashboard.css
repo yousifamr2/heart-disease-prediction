@@ -26,6 +26,13 @@
   padding: 24px 20px 48px;
   font-family: "DM Sans", "Segoe UI", system-ui, sans-serif;
   color: var(--pd-text);
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+body.dark-mode .pd-page {
+  background: var(--pd-bg) !important;
 }
 
 .pd-header {
@@ -727,64 +734,73 @@
   margin-bottom: 8px;
 }
 
+/* Mobile Responsiveness Improvements */
 @media (max-width: 768px) {
+  .pd-page {
+    background: var(--pd-bg) !important;
+    padding: 16px 10px 32px !important;
+  }
   .pd-header {
     grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 12px;
     text-align: center;
+    gap: 12px;
   }
   .pd-back {
     grid-column: 1;
     justify-self: center;
+    padding: 8px 16px;
   }
   .pd-title-block {
     grid-column: 1;
   }
+  .pd-title-block h1 {
+    font-size: 1.75rem;
+  }
+  .pd-grid-stats {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+  }
+  .pd-stat-card {
+    padding: 14px;
+  }
+  .pd-stat-card .value {
+    font-size: 1.25rem;
+  }
   .pd-profile-top {
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
     text-align: center;
   }
+  .pd-avatar-wrap {
+    margin: 0 auto;
+  }
   .pd-actions {
-    justify-content: center;
-    width: 100%;
-  }
-  .pd-actions button {
-    flex: 1;
-    justify-content: center;
-  }
-  .pd-page {
-    padding: 16px 12px 30px;
-  }
-  .pd-card-header {
     flex-direction: column;
-    align-items: flex-start;
-  }
-  .pd-toolbar {
     width: 100%;
-    flex-direction: column;
     align-items: stretch;
   }
-  .pd-toolbar > div,
+  .pd-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .pd-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .pd-toolbar > div {
+    width: 100%;
+  }
   .pd-toolbar input,
   .pd-toolbar select {
     width: 100%;
   }
-}
-
-@media (max-width: 480px) {
-  .pd-stat-card {
-    padding: 15px;
+  .pd-table th,
+  .pd-table td {
+    padding: 8px 6px;
+    font-size: 11px;
   }
-  .pd-stat-card .value {
-    font-size: 1.4rem;
-  }
-  .pd-chart {
-    height: 200px;
-  }
-  .pd-modal {
-    max-height: 90vh;
-    padding: 0;
+  .pd-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

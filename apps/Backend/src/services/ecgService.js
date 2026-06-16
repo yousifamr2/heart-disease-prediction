@@ -71,6 +71,7 @@ class EcgService {
       data: {
         lab_id: lab.id,
         national_id: nid,
+        user_id: patient.id,
         inference_status: "pending",
         uploaded_by: "lab_portal",
         client_request_id: client_request_id ? String(client_request_id).slice(0, 200) : null,
@@ -79,17 +80,71 @@ class EcgService {
 
     try {
       const saved = await saveWfdbPair(row.id, datFile.buffer, heaFile.buffer);
+
+      // Run ECG AI pipeline immediately in memory using uploaded buffers
+      let aiResult = null;
+      let aiError = null;
+      let inferenceStatus = "pending";
+      try {
+        aiResult = await internalEcgPipeline({
+          ecgTestId: row.id,
+          datBuffer: datFile.buffer,
+          heaBuffer: heaFile.buffer,
+        });
+        inferenceStatus = "ok";
+      } catch (err) {
+        console.error("Immediate ECG inference failed on upload:", err);
+        aiError = String(err.message || err).slice(0, 2000);
+        inferenceStatus = "failed";
+      }
+
+      let updateData = {
+        dat_file_path: saved.relativeDat,
+        hea_file_path: saved.relativeHea,
+        original_dat_name: datFile.originalname || null,
+        original_hea_name: heaFile.originalname || null,
+        file_size_bytes: saved.file_size_bytes,
+        checksum_dat: saved.checksum_dat,
+        checksum_hea: saved.checksum_hea,
+      };
+
+      if (inferenceStatus === "ok" && aiResult) {
+        const primary = Array.isArray(aiResult.top_5) && aiResult.top_5[0] ? aiResult.top_5[0] : null;
+        const primaryLabel = primary?.label ?? null;
+        const primaryProb = primary != null ? Number(primary.probability) : null;
+        const detailedPayload = {
+          type: "ecg_inference",
+          top_5: aiResult.top_5,
+          primary_code: primary?.code ?? null,
+          primary_label: primaryLabel,
+        };
+
+        updateData = {
+          ...updateData,
+          primary_diagnosis: primaryLabel,
+          primary_probability: primaryProb,
+          detailed_results_json: detailedPayload,
+          llm_ecg_json: aiResult.llm_ecg_json ?? null,
+          model_name: aiResult.model_name ?? null,
+          model_version: aiResult.model_version ?? null,
+          llm_model: aiResult.llm_model ?? null,
+          llm_prompt_version: aiResult.llm_prompt_version ?? null,
+          inference_status: "ok",
+          inference_error: null,
+          inferred_at: new Date(),
+          prediction_completed_at: new Date(),
+        };
+      } else {
+        updateData = {
+          ...updateData,
+          inference_status: inferenceStatus,
+          inference_error: aiError,
+        };
+      }
+
       const updated = await prisma.ecgTest.update({
         where: { id: row.id },
-        data: {
-          dat_file_path: saved.relativeDat,
-          hea_file_path: saved.relativeHea,
-          original_dat_name: datFile.originalname || null,
-          original_hea_name: heaFile.originalname || null,
-          file_size_bytes: saved.file_size_bytes,
-          checksum_dat: saved.checksum_dat,
-          checksum_hea: saved.checksum_hea,
-        },
+        data: updateData,
         include: { lab: { select: { id: true, name: true, lab_code: true, address: true } } },
       });
       return shapeEcgPublic(updated);
@@ -125,7 +180,10 @@ class EcgService {
 
   static async getMyStatus(user) {
     const latest = await prisma.ecgTest.findFirst({
-      where: { national_id: user.national_id },
+      where: {
+        national_id: user.national_id,
+        inference_status: { not: "failed" },
+      },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -184,97 +242,133 @@ class EcgService {
     return shapeEcgPublic(row);
   }
 
-  /** Latest ECG for patient — cache hit skips AI. */
+  /** Latest ECG for patient — cache hit skips AI, falls back to next valid test if corrupted. */
   static async startForCurrentUser(user) {
-    const latest = await prisma.ecgTest.findFirst({
+    const tests = await prisma.ecgTest.findMany({
       where: { national_id: user.national_id },
       orderBy: { createdAt: "desc" },
       include: { lab: { select: { id: true, name: true, lab_code: true, address: true } } },
     });
 
-    if (!latest) {
+    if (!tests || tests.length === 0) {
       const err = new Error("No ECG data");
       err.statusCode = 404;
       err.code = "NO_ECG";
       throw err;
     }
 
-    if (latest.inference_status === "ok" && latest.detailed_results_json) {
-      if (latest.user_id !== user.id) {
-        await prisma.ecgTest.update({
-          where: { id: latest.id },
-          data: { user_id: user.id },
-        });
+    for (const test of tests) {
+      // Skip previously failed tests
+      if (test.inference_status === "failed") {
+        continue;
       }
-      const top5 = latest.detailed_results_json?.top_5 ?? [];
-      return {
-        cached: true,
-        ecg_test_id: latest.id,
-        primary_diagnosis: latest.primary_diagnosis,
-        primary_probability: latest.primary_probability,
-        top_5: top5,
-        llm_ecg_json: latest.llm_ecg_json,
-        model_name: latest.model_name,
-        model_version: latest.model_version,
-        createdAt: latest.createdAt,
-      };
+
+      // If already ok, return cached results
+      if (test.inference_status === "ok" && test.detailed_results_json) {
+        if (test.user_id !== user.id) {
+          await prisma.ecgTest.update({
+            where: { id: test.id },
+            data: { user_id: user.id },
+          });
+        }
+        const top5 = test.detailed_results_json?.top_5 ?? [];
+        return {
+          cached: true,
+          ecg_test_id: test.id,
+          primary_diagnosis: test.primary_diagnosis,
+          primary_probability: test.primary_probability,
+          top_5: top5,
+          llm_ecg_json: test.llm_ecg_json,
+          model_name: test.model_name,
+          model_version: test.model_version,
+          createdAt: test.createdAt,
+        };
+      }
+
+      // If pending, try to read files and analyze
+      if (!test.dat_file_path || !test.hea_file_path) {
+        // Mark as failed since paths are invalid/missing
+        await prisma.ecgTest.update({
+          where: { id: test.id },
+          data: {
+            inference_status: "failed",
+            inference_error: "ECG record is missing file paths in database."
+          }
+        });
+        continue;
+      }
+
+      try {
+        const { datBuffer, heaBuffer } = await readWfdbPair(test.dat_file_path, test.hea_file_path);
+
+        const ai = await internalEcgPipeline({
+          ecgTestId: test.id,
+          datBuffer,
+          heaBuffer,
+        });
+
+        const primary = Array.isArray(ai.top_5) && ai.top_5[0] ? ai.top_5[0] : null;
+        const primaryLabel = primary?.label ?? null;
+        const primaryProb = primary != null ? Number(primary.probability) : null;
+
+        const detailedPayload = {
+          type: "ecg_inference",
+          top_5: ai.top_5,
+          primary_code: primary?.code ?? null,
+          primary_label: primaryLabel,
+        };
+
+        await prisma.ecgTest.update({
+          where: { id: test.id },
+          data: {
+            user_id: user.id,
+            primary_diagnosis: primaryLabel,
+            primary_probability: primaryProb,
+            detailed_results_json: detailedPayload,
+            llm_ecg_json: ai.llm_ecg_json ?? null,
+            model_name: ai.model_name ?? null,
+            model_version: ai.model_version ?? null,
+            llm_model: ai.llm_model ?? null,
+            llm_prompt_version: ai.llm_prompt_version ?? null,
+            inference_status: "ok",
+            inference_error: null,
+            inferred_at: new Date(),
+            prediction_completed_at: new Date(),
+          },
+        });
+
+        return {
+          cached: false,
+          ecg_test_id: test.id,
+          primary_diagnosis: primaryLabel,
+          primary_probability: primaryProb,
+          top_5: ai.top_5,
+          llm_ecg_json: ai.llm_ecg_json,
+          model_name: ai.model_name,
+          model_version: ai.model_version,
+          createdAt: test.createdAt,
+        };
+      } catch (err) {
+        if (err.statusCode === 400 || err.code === "ENOENT" || String(err.message).includes("missing on local disk")) {
+          // Mark as failed in DB on-the-fly and warn
+          await prisma.ecgTest.update({
+            where: { id: test.id },
+            data: {
+              inference_status: "failed",
+              inference_error: "ECG recording files were lost due to server restart."
+            }
+          });
+          console.warn(`Skipped and marked corrupted ECG test ${test.id} as failed.`);
+          continue;
+        }
+        throw err;
+      }
     }
 
-    if (!latest.dat_file_path || !latest.hea_file_path) {
-      const err = new Error("ECG record is missing files on disk");
-      err.statusCode = 400;
-      throw err;
-    }
-
-    const { datBuffer, heaBuffer } = await readWfdbPair(latest.dat_file_path, latest.hea_file_path);
-
-    const ai = await internalEcgPipeline({
-      ecgTestId: latest.id,
-      datBuffer,
-      heaBuffer,
-    });
-
-    const primary = Array.isArray(ai.top_5) && ai.top_5[0] ? ai.top_5[0] : null;
-    const primaryLabel = primary?.label ?? null;
-    const primaryProb = primary != null ? Number(primary.probability) : null;
-
-    const detailedPayload = {
-      type: "ecg_inference",
-      top_5: ai.top_5,
-      primary_code: primary?.code ?? null,
-      primary_label: primaryLabel,
-    };
-
-    await prisma.ecgTest.update({
-      where: { id: latest.id },
-      data: {
-        user_id: user.id,
-        primary_diagnosis: primaryLabel,
-        primary_probability: primaryProb,
-        detailed_results_json: detailedPayload,
-        llm_ecg_json: ai.llm_ecg_json ?? null,
-        model_name: ai.model_name ?? null,
-        model_version: ai.model_version ?? null,
-        llm_model: ai.llm_model ?? null,
-        llm_prompt_version: ai.llm_prompt_version ?? null,
-        inference_status: "ok",
-        inference_error: null,
-        inferred_at: new Date(),
-        prediction_completed_at: new Date(),
-      },
-    });
-
-    return {
-      cached: false,
-      ecg_test_id: latest.id,
-      primary_diagnosis: primaryLabel,
-      primary_probability: primaryProb,
-      top_5: ai.top_5,
-      llm_ecg_json: ai.llm_ecg_json,
-      model_name: ai.model_name,
-      model_version: ai.model_version,
-      createdAt: latest.createdAt,
-    };
+    // If loop finishes and all tests were skipped
+    const err = new Error("All ECG recording files are missing on local disk. Please upload the ECG again.");
+    err.statusCode = 400;
+    throw err;
   }
 
   static async chartPngForUser(ecgTestId, user) {

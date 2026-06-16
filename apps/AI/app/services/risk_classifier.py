@@ -23,13 +23,11 @@ from enum import Enum
 #  Constants
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Data-driven threshold (computed via Youden's J on the actual dataset, AUC=0.977)
-DECISION_THRESHOLD: float = 0.41   # ← the ONLY value that drives system decisions
+# Data-driven threshold (set to 50% as requested)
+DECISION_THRESHOLD: float = 0.50   # ← the ONLY value that drives system decisions
 
-# UI display boundaries (clinically motivated, widened to avoid micro-zones)
-UI_LOW_MAX:      float = 0.40   # <= 40%       → Low Risk (UI)
-UI_MODERATE_MAX: float = 0.60   # 41% – 60%    → Moderate Risk (UI)
-                                 # > 60%        → High Risk (UI)
+# UI display boundaries (binary: < 50% Low, >= 50% High)
+UI_LOW_MAX:      float = 0.50   # < 50%        → Low Risk (UI)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -43,9 +41,8 @@ class Decision(str, Enum):
 
 
 class RiskLevel(str, Enum):
-    """3-tier UI label — display only, no decision logic."""
+    """2-tier UI label — display only, no decision logic."""
     LOW      = "Low Risk"
-    MODERATE = "Moderate Risk"
     HIGH     = "High Risk"
 
 
@@ -63,7 +60,7 @@ class RiskAssessment:
     probability   : float  — raw model output (0.0 – 1.0)
     probability_pct: float — same value as a percentage (0 – 100)
     decision      : Decision   — SYSTEM logic: "low" | "high"
-    risk_level    : RiskLevel  — UI label: "Low Risk" | "Moderate Risk" | "High Risk"
+    risk_level    : RiskLevel  — UI label: "Low Risk" | "High Risk"
     decision_label: str    — human-readable decision for API / LLM
     risk_color    : str    — hex color for frontend badge
     """
@@ -92,7 +89,7 @@ class RiskAssessment:
 
 def get_decision(probability: float) -> Decision:
     """
-    Binary medical decision based on the data-driven threshold (0.41).
+    Binary medical decision based on the threshold (0.50).
 
     Parameters
     ----------
@@ -112,12 +109,11 @@ def get_decision(probability: float) -> Decision:
 
 def get_risk_level(probability: float) -> RiskLevel:
     """
-    3-tier UI label for patient-facing display.
+    2-tier UI label for patient-facing display.
 
-    Boundaries (clinical, not data-driven):
-      < 30%        → Low Risk
-      30% – 65%    → Moderate Risk
-      > 65%        → High Risk
+    Boundaries:
+      < 50%        → Low Risk
+      >= 50%       → High Risk
 
     ⚠️  FOR DISPLAY ONLY — must not influence any system decision.
 
@@ -132,10 +128,8 @@ def get_risk_level(probability: float) -> RiskLevel:
     if not (0.0 <= probability <= 1.0):
         raise ValueError(f"probability must be in [0, 1], got {probability}")
 
-    if probability <= UI_LOW_MAX:
+    if probability < UI_LOW_MAX:
         return RiskLevel.LOW
-    elif probability <= UI_MODERATE_MAX:
-        return RiskLevel.MODERATE
     else:
         return RiskLevel.HIGH
 
@@ -152,7 +146,6 @@ def _risk_color(risk_level: RiskLevel) -> str:
     """Hex color for the frontend badge."""
     return {
         RiskLevel.LOW:      "#4ade80",   # green
-        RiskLevel.MODERATE: "#facc15",   # yellow
         RiskLevel.HIGH:     "#f87171",   # red
     }[risk_level]
 
@@ -178,7 +171,7 @@ def assess_risk(probability: float) -> RiskAssessment:
     -------
     >>> result = assess_risk(0.52)
     >>> result.decision        # Decision.HIGH  — drives alerts
-    >>> result.risk_level      # RiskLevel.MODERATE  — shown on UI
+    >>> result.risk_level      # RiskLevel.HIGH  — shown on UI
     >>> result.to_dict()       # ready for JSON API response
     """
     decision   = get_decision(probability)
@@ -210,10 +203,9 @@ if __name__ == "__main__":
     print("\n" + "═" * 90)
     print("  HYBRID RISK ASSESSMENT — DEMO")
     print("═" * 90)
-    print(f"  Data-driven threshold  : {DECISION_THRESHOLD*100:.1f}%  (Youden's J, AUC=0.977)")
-    print(f"  UI boundaries          : <={UI_LOW_MAX*100:.0f}% Low  |  "
-          f"{UI_LOW_MAX*100 + 1:.0f}–{UI_MODERATE_MAX*100:.0f}% Moderate  |  "
-          f">{UI_MODERATE_MAX*100:.0f}% High")
+    print(f"  Data-driven threshold  : {DECISION_THRESHOLD*100:.1f}%")
+    print(f"  UI boundaries          : <{UI_LOW_MAX*100:.0f}% Low  |  "
+          f">={UI_LOW_MAX*100:.0f}% High")
     print("═" * 90)
     print(f"  {header}")
     print("  " + "─" * 88)
@@ -221,7 +213,7 @@ if __name__ == "__main__":
     for p in demo_probs:
         result = assess_risk(p)
         decision_icon   = "🔴" if result.decision == Decision.HIGH else "🟢"
-        risk_icon       = {"Low Risk": "🟢", "Moderate Risk": "🟡", "High Risk": "🔴"}[
+        risk_icon       = {"Low Risk": "🟢", "High Risk": "🔴"}[
             result.risk_level.value
         ]
         print(

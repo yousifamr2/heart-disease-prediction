@@ -1,0 +1,13 @@
+{
+  "name": "heart-disease-prediction-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo for Heart Disease Prediction App",
+  "private": true,
+  "scripts": {
+    "dev:backend": "npm run dev --prefix apps/Backend",
+    "dev:frontend": "npm start --prefix apps/Frontend",
+    "dev:ai": "python apps/AI/app/main.py",
+    "install:all": "npm install --prefix apps/Backend && npm install --prefix apps/Frontend",
+    "build:frontend": "npm run build --prefix apps/Frontend"
+  }
+}

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Register.css";
+import API_BASE_URL from "../../config";
+
 
 import heartImg from "../../assets/heart.png";
 import logo from "../../assets/Logo.png";
@@ -94,7 +96,7 @@ const Register = () => {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        `${API_BASE_URL}/api/auth/register`,
         {
           email: form.email,
           national_id: form.nationalId,
@@ -136,7 +138,7 @@ const Register = () => {
         >
           <div className="brand">
             <img src={logo} alt="logo" className="brand-logo" />
-            <h1>Heart Diseases</h1>
+            <h1>Nabdak</h1>
           </div>
         </div>
 

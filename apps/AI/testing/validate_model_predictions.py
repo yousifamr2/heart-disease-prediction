@@ -77,7 +77,7 @@ def load_model():
     return model, model_path
 
 
-def make_predictions(model, X_test, threshold=0.7):
+def make_predictions(model, X_test, threshold=0.5):
     """
     Make predictions using the loaded model with custom threshold.
     
@@ -88,7 +88,7 @@ def make_predictions(model, X_test, threshold=0.7):
     X_test : pd.DataFrame
         Test features
     threshold : float
-        Probability threshold for classification (default: 0.7)
+        Probability threshold for classification (default: 0.5)
         If probability of Disease >= threshold, predict Disease (1)
         Otherwise, predict No Disease (0)
     """
@@ -112,7 +112,7 @@ def make_predictions(model, X_test, threshold=0.7):
                 probabilities = model.predict_proba(X_test)
                 logger.info("Generated predictions with probabilities")
                 
-                # Apply custom threshold (70%)
+                # Apply custom threshold (50%)
                 # probabilities[:, 1] is the probability of Disease class
                 if probabilities.shape[1] >= 2:
                     disease_proba = probabilities[:, 1]
@@ -164,7 +164,7 @@ def validate_predictions(y_true, y_pred, X_test, risk_levels):
     return accuracy, cm, report, comparison_df
 
 
-def print_results(accuracy, cm, report, comparison_df, threshold=0.7):
+def print_results(accuracy, cm, report, comparison_df, threshold=0.5):
     """Print formatted results."""
     print("\n" + "="*80)
     print(f"MODEL PREDICTION VALIDATION RESULTS (Threshold: {threshold*100:.0f}%)")
@@ -240,16 +240,16 @@ def main():
         logger.info("Loading trained model...")
         model, model_path = load_model()
         
-        # Make predictions with 70% threshold
-        logger.info("Making predictions with 70% threshold...")
-        y_pred, y_proba = make_predictions(model, X_test, threshold=0.7)
+        # Make predictions with 50% threshold
+        logger.info("Making predictions with 50% threshold...")
+        y_pred, y_proba = make_predictions(model, X_test, threshold=0.5)
         
         # Validate
         logger.info("Validating predictions...")
         accuracy, cm, report, comparison_df = validate_predictions(y_true, y_pred, X_test, risk_levels)
         
         # Print results
-        print_results(accuracy, cm, report, comparison_df, threshold=0.7)
+        print_results(accuracy, cm, report, comparison_df, threshold=0.5)
         
         # Save detailed results
         output_path = os.path.join(TEST_CASES_DIR, "prediction_results.csv")

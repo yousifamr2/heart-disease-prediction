@@ -107,6 +107,15 @@ async function internalShapPng(labTestId) {
   return Buffer.from(res.data);
 }
 
+async function internalShapData(labTestId) {
+  const res = await aiClient.post(
+    "/internal/shap/data",
+    { target_id: labTestId, user_id: null }
+  );
+  assertOk(res, "internal shap data");
+  return res.data;
+}
+
 async function internalReportPdf(labTestId) {
   const res = await aiClient.post(
     "/internal/report",
@@ -173,6 +182,7 @@ module.exports = {
   aiClient,
   internalPredict,
   internalShapPng,
+  internalShapData,
   internalReportPdf,
   internalEcgPipeline,
   internalEcgChartFromTop5,

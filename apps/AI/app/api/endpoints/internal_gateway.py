@@ -382,7 +382,7 @@ def internal_report_pdf(body: InternalTargetRequest, db: Session = Depends(get_d
         lab_record = db.query(Lab).filter(Lab.id == patient.lab_id).first()
         raw_shap = prediction_record.shap_values_json
         if raw_shap:
-            shap_data = ml_service._normalize_shap_dict(raw_shap)
+            shap_data = raw_shap if isinstance(raw_shap, dict) else dict(raw_shap)
         else:
             data = [
                 patient.age,

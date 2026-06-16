@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 
 // يجب أن يكون dotenv أول سطر قبل أي require آخر
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
+require("./config/env");
 
 // تأكيد تحميل DATABASE_URL قبل إنشاء Prisma Client
 if (!process.env.DATABASE_URL) {

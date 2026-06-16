@@ -1,0 +1,331 @@
+.contact-page-container {
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: "DM Sans", sans-serif;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contact-hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.contact-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #21444b 0%, #1198b7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+}
+
+body.dark-mode .contact-title {
+  background: linear-gradient(90deg, #e0eef3 0%, #1198b7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.contact-subtitle {
+  font-size: 1.5rem;
+  color: #5f7d8a;
+  font-weight: 600;
+}
+
+body.dark-mode .contact-subtitle {
+  color: #a0c0cb;
+}
+
+/* Main Card */
+.contact-main-card {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-wrap: wrap;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(17, 152, 183, 0.12);
+  border: 1px solid #e0eef3;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .contact-main-card {
+  background: #13272e;
+  border-color: #1b353e;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Left Panel */
+.contact-info-panel {
+  flex: 1 1 350px;
+  background: #f4f9fc;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-radius: 24px 0 0 24px;
+  transition: background 0.3s ease;
+}
+
+body.dark-mode .contact-info-panel {
+  background: #0d1e24;
+}
+
+.support-icon-wrapper {
+  width: 120px;
+  height: 120px;
+  background: #e0eef3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 25px;
+  color: #1198b7;
+  font-size: 50px;
+  transition: all 0.3s ease;
+}
+
+body.dark-mode .support-icon-wrapper {
+  background: #1b353e;
+  color: #38bdf8;
+}
+
+.support-icon-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.info-title {
+  color: #0f3d4c;
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 15px;
+  letter-spacing: 1px;
+}
+
+body.dark-mode .info-title {
+  color: #e0eef3;
+}
+
+.info-desc {
+  color: #5f7d8a;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+body.dark-mode .info-desc {
+  color: #a0c0cb;
+}
+
+.contact-details-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.contact-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #0f3d4c;
+  font-size: 15px;
+  font-weight: 600;
+  width: 100%;
+  text-align: left;
+}
+
+body.dark-mode .contact-detail-item {
+  color: #e0eef3;
+}
+
+.detail-icon {
+  color: #1198b7;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+body.dark-mode .detail-icon {
+  color: #38bdf8;
+}
+
+/* Right Panel */
+.contact-form-panel {
+  flex: 2 1 500px;
+  background: linear-gradient(135deg, #0f3d4c 0%, #1198b7 100%);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+body.dark-mode .contact-form-panel {
+  background: linear-gradient(135deg, #13272e 0%, #1b353e 100%);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row-grid {
+  display: flex;
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .form-row-grid {
+    flex-direction: column;
+  }
+}
+
+.form-group-custom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.form-group-custom label {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.form-group-custom input,
+.form-group-custom textarea {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: white;
+  color: #0f3d4c;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.form-group-custom input::placeholder,
+.form-group-custom textarea::placeholder {
+  color: #8faab5;
+}
+
+body.dark-mode .form-group-custom input,
+body.dark-mode .form-group-custom textarea {
+  background: #090d16 !important;
+  color: #f8fafc !important;
+  border-color: #222f47 !important;
+}
+
+body.dark-mode .form-group-custom input::placeholder,
+body.dark-mode .form-group-custom textarea::placeholder {
+  color: #556c75;
+}
+
+.form-group-custom input:focus,
+.form-group-custom textarea:focus {
+  border-color: white;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .form-group-custom input:focus,
+body.dark-mode .form-group-custom textarea:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2) !important;
+}
+
+.form-submit-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.submit-btn-custom {
+  background: #0f3d4c;
+  color: white;
+  border: none;
+  padding: 12px 35px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .submit-btn-custom {
+  background: #38bdf8;
+  color: #090d16;
+}
+
+.submit-btn-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background: #13272e;
+}
+
+body.dark-mode .submit-btn-custom:hover {
+  background: white;
+  color: #090d16;
+  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+}
+
+/* Success Message */
+.success-message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  height: 100%;
+  animation: fadeIn 0.5s ease;
+}
+
+.success-checkmark {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin-bottom: 20px;
+  border: 2px solid white;
+}
+
+.success-message-container h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.success-message-container p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile responsive */
+@media (max-width: 991px) {
+  .contact-info-panel {
+    border-radius: 24px 24px 0 0;
+  }
+}

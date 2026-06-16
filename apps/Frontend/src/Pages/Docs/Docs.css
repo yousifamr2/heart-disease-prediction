@@ -1,0 +1,270 @@
+.docs-page-container {
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: "DM Sans", sans-serif;
+  background: transparent;
+}
+
+.docs-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.docs-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #21444b 0%, #1198b7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+}
+
+body.dark-mode .docs-title {
+  background: linear-gradient(90deg, #e0eef3 0%, #1198b7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.docs-subtitle {
+  font-size: 1.25rem;
+  color: #5f7d8a;
+}
+
+body.dark-mode .docs-subtitle {
+  color: #a0c0cb;
+}
+
+.docs-tabs-wrapper {
+  max-width: 600px;
+  margin: 0 auto 30px;
+}
+
+.docs-tabs {
+  display: flex;
+  background: #e0eef3;
+  border-radius: 999px;
+  padding: 6px;
+  gap: 4px;
+}
+
+body.dark-mode .docs-tabs {
+  background: #13272e;
+}
+
+.doc-tab-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #0f3d4c;
+  padding: 10px;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+body.dark-mode .doc-tab-btn {
+  color: #a0c0cb;
+}
+
+.doc-tab-btn.active {
+  background: #1198b7;
+  color: white;
+  box-shadow: 0 4px 12px rgba(17, 152, 183, 0.25);
+}
+
+body.dark-mode .doc-tab-btn.active {
+  background: #1198b7;
+  color: white;
+}
+
+.docs-content-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(17, 152, 183, 0.12);
+  border: 1px solid #e0eef3;
+}
+
+body.dark-mode .docs-content-card {
+  background: #13272e;
+  border-color: #1b353e;
+  color: #e0eef3;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.animate-fade {
+  animation: fadeIn 0.35s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lead-text {
+  font-size: 17px;
+  color: #5f7d8a;
+  margin-bottom: 25px;
+}
+
+body.dark-mode .lead-text {
+  color: #a0c0cb;
+}
+
+.guide-steps {
+  padding-left: 20px;
+}
+
+.guide-steps li {
+  margin-bottom: 20px;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.factors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.factor-item {
+  background: #f4f9fc;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid #e0eef3;
+}
+
+body.dark-mode .factor-item {
+  background: #0d1e24;
+  border-color: #1b353e;
+}
+
+.factor-item h4 {
+  margin: 0 0 6px;
+  color: #0f3d4c;
+  font-weight: 700;
+}
+
+body.dark-mode .factor-item h4 {
+  color: #e0eef3;
+}
+
+.factor-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #5f7d8a;
+  line-height: 1.6;
+}
+
+body.dark-mode .factor-item p {
+  color: #a0c0cb;
+}
+
+.ai-explanation-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.boundary-card {
+  padding: 20px;
+  border-radius: 16px;
+  border: 1.5px solid transparent;
+}
+
+.boundary-card.low-risk {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.boundary-card.high-risk {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.boundary-card h3 {
+  margin: 0 0 10px;
+}
+
+.boundary-card.low-risk h3 {
+  color: #16a34a;
+}
+
+.boundary-card.high-risk h3 {
+  color: #dc2626;
+}
+
+.boundary-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.ecg-guide-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.ecg-step-card {
+  background: #f4f9fc;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #e0eef3;
+  transition: transform 0.2s;
+}
+
+body.dark-mode .ecg-step-card {
+  background: #0d1e24;
+  border-color: #1b353e;
+}
+
+.ecg-step-card h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #0f3d4c;
+}
+
+body.dark-mode .ecg-step-card h3 {
+  color: #e0eef3;
+}
+
+.ecg-step-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #5f7d8a;
+}
+
+body.dark-mode .ecg-step-card p {
+  color: #a0c0cb;
+}
+
+@media (max-width: 768px) {
+  .docs-title {
+    font-size: 2.25rem;
+  }
+  .docs-content-card {
+    padding: 20px;
+  }
+  .ai-explanation-box,
+  .ecg-guide-box {
+    grid-template-columns: 1fr;
+  }
+  .docs-tabs {
+    flex-direction: column;
+    border-radius: 14px;
+  }
+}

@@ -1,86 +1,354 @@
-/* logo */
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+}
+.main {
+  min-height: 100vh;
+} /* logo */
 .brand-name {
-  color: #104753;
+  color: var(--text-title);
 }
 .nav-item {
   cursor: pointer;
   font-size: 14px;
+  color: var(--text-title);
 }
 .brand {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  color: #104753;
+  font-family: "Arial Narrow Bold", sans-serif;
+  font-weight: bold;
+  color: rgb(33, 68, 75);
+  font-size: 28px;
+}
+nav li {
+  color: #0f3d4c;
 }
 .logo {
-  width: 36px;
-  height: auto;
+  width: 40px;
 }
 .profile {
   width: 25px;
-}
+} /* تخلي اللينكات تبقى واضحة */
 .nav-link {
-  color: #104753 !important;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.05em;
-  transition: color 0.3s ease;
-}
-.nav-link:hover {
-  color: #3ca6c1 !important;
-}
-/* لما الشاشة تصغر */
+  color: #0f3d4c !important;
+  font-weight: 500;
+} /* لما الشاشة تصغر */
 @media (max-width: 991px) {
   .navbar-nav {
     margin-top: 15px;
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--pd-border, #e0eef3);
   }
+}
+.navbar {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
 }
 .custom-btn {
-  background-color: #3ca6c1 !important;
+  background-color: #77bac5 !important;
   border: none;
   color: #fff !important;
-  font-weight: 600;
-  font-size: 14px;
-  padding: 10px 24px !important;
-  border-radius: 50px !important;
+  font-weight: 500;
   transition: all 0.3s ease;
   margin-right: 5px;
-  letter-spacing: 0.02em;
-  font-family: 'Outfit', sans-serif;
-  box-shadow: 0 4px 10px rgba(60, 166, 193, 0.15);
+  letter-spacing: 3%;
+  font-family: sans-serif;
 }
 .custom-btn:hover {
-  background-color: #2d8fa6 !important;
-  box-shadow: 0 6px 15px rgba(60, 166, 193, 0.35);
-  transform: translateY(-2px);
-}
+  background-color: #0f86a3 !important;
+  box-shadow: 0 6px 15px rgba(17, 152, 183, 0.35);
+  transform: translateY(-1px);
+} /* للزرار الفاضي */
 .custom-btn-outline {
   background-color: transparent;
-  border: 1.5px solid #3ca6c1 !important;
-  color: #3ca6c1;
-  font-weight: 600;
-  font-size: 14px;
-  padding: 10px 24px !important;
-  border-radius: 50px !important;
+  border: 1.5px solid #1198b7 !important;
+  color: #1198b7;
+  font-weight: 500;
   transition: all 0.3s ease;
-  font-family: 'Outfit', sans-serif;
-}
-.custom-btn-outline:hover {
-  background-color: #3ca6c1 !important;
-  color: #fff !important;
-  box-shadow: 0 6px 15px rgba(60, 166, 193, 0.25);
 }
 
-@media (max-width: 576px) {
-  .brand {
-    font-size: 16px;
-  }
-  .logo {
-    width: 30px;
-  }
-  .custom-btn, .custom-btn-outline {
-    font-size: 12px;
-    padding: 6px 10px;
-  }
+.navbar-toggler {
+  border: 1.5px solid #1198b7 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 6px 10px !important;
+  background-color: transparent !important;
 }
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%231198b7' stroke-width='2.5' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+}
+
+/* ================= DARK MODE ================= */
+body.dark-mode {
+  background: #090d16 !important;
+  color: #cbd5e1 !important;
+  --bg-main: #090d16;
+  --text-title: #f8fafc;
+  --text-body: #94a3b8;
+  --border-light: #222f47;
+  
+  --pd-bg: #090d16;
+  --pd-card: #131926;
+  --pd-text: #f8fafc;
+  --pd-muted: #94a3b8;
+  --pd-border: #222f47;
+  --pd-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* General / Home Page Dark Mode */
+body.dark-mode .page,
+body.dark-mode .app-container {
+  background: #090d16 !important;
+}
+body.dark-mode .hero-title {
+  background: linear-gradient(90deg, #f8fafc 0%, #38bdf8 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+body.dark-mode .hero-subtitle {
+  background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+body.dark-mode .learn {
+  color: #38bdf8 !important;
+  border-color: #38bdf8 !important;
+  background: transparent !important;
+}
+body.dark-mode .learn:hover {
+  color: #090d16 !important;
+  background: #38bdf8 !important;
+  border-color: #38bdf8 !important;
+}
+body.dark-mode .feature-card {
+  background: #131926 !important;
+  border-color: #222f47 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+body.dark-mode .feature-card h3 {
+  color: #38bdf8 !important;
+}
+body.dark-mode .feature-card p {
+  color: #94a3b8 !important;
+}
+body.dark-mode .cap_Card {
+  color: #94a3b8 !important;
+}
+
+/* Navbar Dark Mode */
+body.dark-mode .navbar {
+  background-color: #131926 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
+}
+body.dark-mode .nav-link {
+  color: #f8fafc !important;
+}
+body.dark-mode .brand {
+  color: #38bdf8 !important;
+}
+body.dark-mode .btn-dark-mode {
+  color: #facc15 !important; /* bright sun yellow when in dark mode */
+}
+body.dark-mode .navbar-toggler {
+  border-color: #38bdf8 !important;
+  background-color: #1a2333 !important;
+}
+body.dark-mode .navbar-toggler-icon {
+  filter: none !important;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%2338bdf8' stroke-width='2.5' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+}
+body.dark-mode .navbar-nav {
+  background-color: #131926 !important;
+  border-color: #222f47 !important;
+}
+body.dark-mode .footer {
+  background-color: #131926 !important;
+  border: 1px solid #222f47 !important;
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.45) !important;
+}
+body.dark-mode .footer-title,
+body.dark-mode .footer-text,
+body.dark-mode .footer-list li,
+body.dark-mode .copyright {
+  color: #cbd5e1 !important;
+}
+body.dark-mode .footer-list li:hover {
+  color: #38bdf8 !important;
+}
+body.dark-mode .social-icons a {
+  color: #cbd5e1 !important;
+}
+body.dark-mode .social-icons a:hover {
+  color: #38bdf8 !important;
+}
+
+/* Patient Dashboard Dark Mode */
+body.dark-mode .pd-card {
+  background: var(--pd-card) !important;
+  border-color: var(--pd-border) !important;
+}
+body.dark-mode .pd-card-header {
+  background: linear-gradient(180deg, #1a2333 0%, #131926 100%) !important;
+  border-bottom-color: var(--pd-border) !important;
+}
+body.dark-mode .pd-stat-card {
+  background: var(--pd-card) !important;
+  border-color: var(--pd-border) !important;
+}
+body.dark-mode .pd-table th {
+  background: #1a2333 !important;
+  color: #94a3b8 !important;
+  border-bottom-color: var(--pd-border) !important;
+}
+body.dark-mode .pd-table td {
+  color: #cbd5e1 !important;
+  border-bottom-color: #222f47 !important;
+}
+body.dark-mode .pd-table tbody tr:hover {
+  background: rgba(56, 189, 248, 0.08) !important;
+}
+body.dark-mode .pd-insight-list li {
+  background: #131926 !important;
+  border-color: #222f47 !important;
+}
+body.dark-mode .pd-modal {
+  background: #131926 !important;
+  color: #f8fafc !important;
+}
+body.dark-mode .pd-modal-header {
+  border-bottom-color: var(--pd-border) !important;
+}
+body.dark-mode .pd-modal-close {
+  background: #1a2333 !important;
+  color: #f8fafc !important;
+}
+body.dark-mode input, body.dark-mode select {
+  background: #090d16 !important;
+  color: #f8fafc !important;
+  border-color: #222f47 !important;
+}
+body.dark-mode input:focus, body.dark-mode select:focus {
+  border-color: #38bdf8 !important;
+}
+body.dark-mode input:disabled {
+  background: #101622 !important;
+  color: #64748b !important;
+}
+body.dark-mode .pd-btn-ghost {
+  background: #1a2333 !important;
+  color: #cbd5e1 !important;
+}
+body.dark-mode .pd-btn-ghost:hover {
+  background: #222f47 !important;
+}
+body.dark-mode .pd-pagination button {
+  background: #131926 !important;
+  color: #f8fafc !important;
+  border-color: #222f47 !important;
+}
+body.dark-mode .pd-pagination button:disabled {
+  background: #090d16 !important;
+}
+body.dark-mode .pd-back {
+  background: #131926 !important;
+  border-color: #222f47 !important;
+}
+
+/* Prediction pages dark mode overrides */
+body.dark-mode .prediction-card {
+  background: #131926 !important;
+  border-color: #222f47 !important;
+  color: #cbd5e1 !important;
+}
+body.dark-mode .prediction-card h1,
+body.dark-mode .prediction-card h2,
+body.dark-mode .prediction-card h3 {
+  color: #f8fafc !important;
+}
+body.dark-mode .report-box {
+  background: #1a2333 !important;
+  border-color: #222f47 !important;
+}
+body.dark-mode .result-card {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+}
+body.dark-mode .tip-card {
+  background: linear-gradient(180deg, #131926 0%, #1a2333 100%) !important;
+  color: #cbd5e1 !important;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3) !important;
+}
+body.dark-mode .tips-title {
+  background: linear-gradient(90deg, #f8fafc, #38bdf8) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+body.dark-mode .city-title {
+  color: #f8fafc !important;
+}
+body.dark-mode .hospital-card {
+  background: linear-gradient(180deg, #131926 0%, #1a2333 100%) !important;
+  border-color: #222f47 !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3) !important;
+}
+body.dark-mode .hospital-name {
+  background: linear-gradient(to right, #f8fafc, #38bdf8) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+body.dark-mode .location {
+  color: #94a3b8 !important;
+  border-bottom-color: #222f47 !important;
+}
+body.dark-mode .medical-report-title,
+body.dark-mode .cap-effect {
+  background: linear-gradient(90deg, #f8fafc, #38bdf8) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+body.dark-mode .lab-portal-card {
+  background: #131926 !important;
+  border-color: #222f47 !important;
+}
+body.dark-mode .lab-portal-header h2 {
+  color: #f8fafc !important;
+}
+body.dark-mode .upload-area {
+  background: #090d16 !important;
+  border-color: #38bdf8 !important;
+}
+body.dark-mode .upload-label {
+  color: #cbd5e1 !important;
+}
+body.dark-mode .selected-files h4 {
+  color: #cbd5e1 !important;
+}
+body.dark-mode .selected-files li {
+  background: #090d16 !important;
+  border-color: #222f47 !important;
+}
+body.dark-mode .file-name {
+  color: #cbd5e1 !important;
+}
+body.dark-mode .result-box h4 {
+  color: #cbd5e1 !important;
+}
+body.dark-mode .result-box.success {
+  background: #112d20 !important;
+  border-color: #22c55e !important;
+}
+body.dark-mode .result-box.error {
+  background: #2d1313 !important;
+  border-color: #ef4444 !important;
+}
+

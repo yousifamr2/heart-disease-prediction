@@ -99,3 +99,278 @@
 .ecg-actions .btn {
   min-width: 140px;
 }
+
+/* ================= ECG INTERACTIVE CHART ================= */
+.ecg-chart-card {
+  position: relative;
+  width: 90%;
+  max-width: 720px;
+  margin: 25px auto 15px;
+  padding: 25px 20px 15px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.ecg-svg-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.ecg-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-width: 580px;
+}
+
+/* Tooltip */
+.ecg-tooltip {
+  position: absolute;
+  z-index: 100;
+  min-width: 290px;
+  max-width: 320px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  font-family: inherit;
+  text-align: left;
+  animation: ecgFadeIn 0.15s ease-out;
+  transition: left 0.08s ease-out, top 0.08s ease-out;
+}
+
+.ecg-tooltip .tooltip-header {
+  border-bottom: 1.5px solid #f1f5f9;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ecg-tooltip .tooltip-feature-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.ecg-tooltip .tooltip-code-badge {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.ecg-tooltip .tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ecg-tooltip .tooltip-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ecg-tooltip .tooltip-row.highlight-row {
+  background: #f0f9ff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border-left: 3px solid #0284c7;
+}
+
+.ecg-tooltip .tooltip-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ecg-tooltip .tooltip-value {
+  font-size: 12.5px;
+  color: #334155;
+  font-weight: 500;
+}
+
+.ecg-tooltip .tooltip-value.desc {
+  font-style: italic;
+  line-height: 1.35;
+  color: #475569;
+}
+
+.ecg-tooltip .tooltip-value.score {
+  font-family: monospace;
+  font-weight: 700;
+  color: #0369a1;
+  font-size: 14px;
+}
+
+.ecg-tooltip .tooltip-value.status {
+  font-weight: 700;
+}
+
+.ecg-tooltip .tooltip-value.status.normal {
+  color: #16a34a;
+}
+
+.ecg-tooltip .tooltip-value.status.warning {
+  color: #dc2626;
+}
+
+@keyframes ecgFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .ecg-chart-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 15px 10px !important;
+    border-radius: 12px !important;
+    margin: 20px 0 10px !important;
+  }
+  
+  .ecg-tooltip {
+    min-width: 240px !important;
+    max-width: 260px !important;
+    padding: 10px 12px !important;
+    font-size: 11.5px !important;
+  }
+  
+  .ecg-tooltip .tooltip-feature-name {
+    font-size: 13px !important;
+  }
+  
+  .ecg-tooltip .tooltip-value {
+    font-size: 11.5px !important;
+  }
+}
+
+/* ================= ECG MOBILE CARD LAYOUT ================= */
+.ecg-mobile-container {
+  width: 100%;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.ecg-mobile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.ecg-mobile-item-card {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: left;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ecg-mobile-item-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+}
+
+.ecg-mobile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ecg-mobile-label {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: capitalize;
+}
+
+.ecg-mobile-code-badge {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.ecg-mobile-bar-wrapper {
+  background: #f1f5f9;
+  height: 10px;
+  border-radius: 5px;
+  width: 100%;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.ecg-mobile-bar {
+  height: 100%;
+  border-radius: 5px;
+  width: 0; /* Animated in JS */
+}
+
+.ecg-mobile-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: #64748b;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ecg-mobile-probability strong {
+  font-family: monospace;
+  font-size: 12.5px;
+  color: #0369a1;
+}
+
+.ecg-mobile-status {
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ecg-mobile-status.normal {
+  color: #16a34a;
+}
+
+.ecg-mobile-status.warning {
+  color: #dc2626;
+}
+
+.ecg-mobile-desc {
+  font-size: 12px;
+  color: #475569;
+  line-height: 1.4;
+  font-style: italic;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 8px;
+  margin-top: 8px;
+}
+

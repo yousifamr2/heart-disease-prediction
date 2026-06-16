@@ -1,0 +1,41 @@
+[phases.setup]
+# Complete list of system libraries needed for WeasyPrint rendering and Playwright Chromium
+aptPkgs = [
+  "libcairo2",
+  "libglib2.0-0",
+  "libpango-1.0-0",
+  "libpangocairo-1.0-0",
+  "libpangoft2-1.0-0",
+  "libharfbuzz0b",
+  "libgdk-pixbuf-2.0-0",
+  "libffi-dev",
+  "shared-mime-info",
+  "fonts-liberation",
+  "fontconfig",
+  "libnss3",
+  "libnspr4",
+  "libatk1.0-0",
+  "libatk-bridge2.0-0",
+  "libcups2",
+  "libdrm2",
+  "libdbus-1-3",
+  "libxcomposite1",
+  "libxdamage1",
+  "libxext6",
+  "libxfixes3",
+  "libxrandr2",
+  "libgbm1",
+  "libasound2",
+  "libxkbcommon0"
+]
+
+[phases.install]
+# Force Playwright to install browsers inside the project directory so they persist to the runner layer
+cmds = [
+  "pip install -r requirements.txt",
+  "PLAYWRIGHT_BROWSERS_PATH=/app/.cache/ms-playwright playwright install chromium",
+]
+
+[start]
+# Explicitly set library path for ctypes and browser path for Playwright, expanding $PORT via shell
+cmd = "sh -c 'LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:/usr/lib PLAYWRIGHT_BROWSERS_PATH=/app/.cache/ms-playwright uvicorn app.main:app --host 0.0.0.0 --port $PORT'"

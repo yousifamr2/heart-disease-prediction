@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config";
+
 import { useNavigate } from "react-router-dom";
 import "./LabPortal.css";
 import { FaUpload, FaFileCsv, FaTimes } from "react-icons/fa";
@@ -116,10 +118,10 @@ const LabPortal = () => {
       });
 
       // Using the required x-lab-key header as per API docs + x-lab-id to enforce lab match on backend
-      const res = await axios.post("http://localhost:5000/api/lab-portal/upload-csvs", formData, {
+      const res = await axios.post(`${API_BASE_URL}/api/lab-portal/upload-csvs`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "x-lab-key": "admin-key-change-me",
+          "x-lab-key": process.env.REACT_APP_LAB_API_KEY || "admin-key-change-me",
           "x-lab-id": lab.id,
         },
       });
@@ -160,10 +162,10 @@ const LabPortal = () => {
       formData.append("national_id", ecgNationalId.trim());
       formData.append("dat_file", ecgDat);
       formData.append("hea_file", ecgHea);
-      const res = await axios.post("http://localhost:5000/api/lab-portal/ecg", formData, {
+      const res = await axios.post(`${API_BASE_URL}/api/lab-portal/ecg`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "x-lab-key": "admin-key-change-me",
+          "x-lab-key": process.env.REACT_APP_LAB_API_KEY || "admin-key-change-me",
           "x-lab-id": lab.id,
         },
       });

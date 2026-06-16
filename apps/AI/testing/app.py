@@ -112,10 +112,10 @@ def load_scaler_if_exists():
     return None
 
 
-def predict(model, X: pd.DataFrame, threshold: float = 0.7):
+def predict(model, X: pd.DataFrame, threshold: float = 0.5):
     """
     Generate predictions and probabilities (if supported).
-    Uses custom threshold (default 70%) for classification.
+    Uses custom threshold (default 50%) for classification.
     
     Parameters:
     -----------
@@ -124,7 +124,7 @@ def predict(model, X: pd.DataFrame, threshold: float = 0.7):
     X : pd.DataFrame
         Input features
     threshold : float
-        Probability threshold for Disease classification (default: 0.7)
+        Probability threshold for Disease classification (default: 0.5)
         If probability of Disease >= threshold, predict Disease (1)
         Otherwise, predict No Disease (0)
     """
@@ -148,7 +148,7 @@ def predict(model, X: pd.DataFrame, threshold: float = 0.7):
             try:
                 proba = model.predict_proba(X)
                 
-                # Apply custom threshold (70% by default)
+                # Apply custom threshold (50% by default)
                 if proba.shape[1] >= 2:
                     disease_proba = proba[:, 1]  # Probability of Disease class
                     preds = (disease_proba >= threshold).astype(int)
@@ -192,7 +192,7 @@ prediction_threshold = st.sidebar.slider(
     "Probability Threshold for Disease (%)",
     min_value=0,
     max_value=100,
-    value=70,
+    value=50,
     step=5,
     help="If probability of Disease >= threshold, predict Disease. Otherwise, predict No Disease."
 )

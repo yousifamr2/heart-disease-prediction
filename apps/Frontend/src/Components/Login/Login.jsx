@@ -8,6 +8,7 @@ import { FaUser, FaHospital, FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
 import axios from "axios";
+import API_BASE_URL from "../../config";
 
 const Login = () => {
 
@@ -82,12 +83,11 @@ const Login = () => {
 
       try {
         setLoading(true);
-        const res = await axios.post("http://localhost:5000/api/auth/login", {
+        const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
           username: form.username,
           password: form.password,
         });
 
-        alert("Login Successfully");
         const token = res.data.token || res.data.data?.token;
         if (token) localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(res.data.data || res.data.user));
@@ -110,7 +110,7 @@ const Login = () => {
 
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:5000/api/labs");
+        const res = await axios.get(`${API_BASE_URL}/api/labs`);
         const labs = res.data.data;
         
         const matchedLab = labs.find(
@@ -118,7 +118,6 @@ const Login = () => {
         );
 
         if (matchedLab) {
-          alert("Lab Login Successfully");
           localStorage.setItem("lab", JSON.stringify(matchedLab));
           setErrors({});
           navigate("/lab-portal");
@@ -254,7 +253,7 @@ const Login = () => {
         >
           <div className="logo-title-wrapper">
             <img src={logo} className="logo" alt="logo" />
-            <h1>Heart Diseases</h1>
+            <h1>Nabdak</h1>
           </div>
         </div>
       </div>

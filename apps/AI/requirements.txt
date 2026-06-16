@@ -34,7 +34,6 @@ requests
 
 # ── Report Generation (HTML → PDF pipeline) ────────────────────────────────
 jinja2                # HTML templating
-playwright>=1.40      # HTML→PDF via Chromium (Windows-friendly; then: playwright install chromium)
-pdfkit                # Fallback HTML → PDF (requires wkhtmltopdf binary)
-# xhtml2pdf is optional: on Python 3.13 + Windows it pulls python-bidi (Rust)
-# and fails without Visual Studio Build Tools. Playwright is tried first in code.
+weasyprint            # HTML→PDF via Cairo (runtime: libcairo2 installed via apt)
+playwright>=1.40      # Chromium headless PDF fallback (playwright install chromium in build step)
+

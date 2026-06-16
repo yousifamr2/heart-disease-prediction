@@ -199,8 +199,7 @@
 <div class="section">
     <div class="section-title">Risk Assessment</div>
     <div class="risk-box 
-        {% if ui_risk_level == 'Low' %}risk-low
-        {% elif ui_risk_level == 'Moderate' %}risk-moderate
+        {% if 'low' in ui_risk_level|lower %}risk-low
         {% else %}risk-high
         {% endif %}">
         Probability: {{ probability }}% <br>
