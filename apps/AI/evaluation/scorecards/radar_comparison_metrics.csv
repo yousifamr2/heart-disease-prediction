@@ -1,0 +1,6 @@
+Metric,Custom Script,RAGAS Framework,DeepEval Framework
+Faithfulness,80.0,66.67,100.0
+Answer Relevance,89.0,65.65,66.67
+Safety / Guardrails,100.0,83.33,100.0
+Consistency,99.19,85.0,88.0
+Readability,78.34,78.0,80.0
