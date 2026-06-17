@@ -13,12 +13,7 @@ if _app_dir not in sys.path:
 _env_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(_env_path, encoding="utf-8-sig")
 
-<<<<<<< Updated upstream
-# Triggering uvicorn reload after env variable correction
-from fastapi import FastAPI, HTTPException
-=======
 from fastapi import FastAPI, HTTPException, Depends
->>>>>>> Stashed changes
 from fastapi.responses import JSONResponse
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from sqlalchemy.orm import Session
